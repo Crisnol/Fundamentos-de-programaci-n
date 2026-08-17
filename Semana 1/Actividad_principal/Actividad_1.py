@@ -15,3 +15,4 @@ pocentaje = (totalTime/24)*100
 print(f"\n{userName}, Este es tu resumen diario del tiempo en diferentes plataformas")
 print(f"Tiempo total acumulado: {totalTime} hrs")
 print(f"Porcentaje de tu dia: {pocentaje}%\n")
+
