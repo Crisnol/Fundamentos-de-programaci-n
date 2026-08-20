@@ -20,28 +20,39 @@ total_general = 0
 while (i <= num_visitantes):
     # pdb.set_trace()
 
-    edad = int(input("\nIngrese la edad del visitante: "))
+    edad = int(input(f"\nIngrese la edad del visitante {i}: "))
 
     if (edad >= 18):
         precio_boleto = PRECIO_MAYOR_18
     elif(edad <= 17 and edad >= 3):
         precio_boleto = PRECIO_MENOR_EDAD
+    elif(edad < 0):
+        print("Edad incorrecta, error en el sistema")
+        break 
     else:
+        print(f"Visitante\tSubtotal\tDescuento\tTotal\tAcumulado")
+        print(f"Visitante {i}\t{precio_boleto}\t\t-{descuento:.2f}\t\t{precio_descuento}\t${total_general}")
         i += 1
         continue
     
     tipo_visitante = input("Ingresa el tipo de visitante (Adulto mayor / Profesor / Estudiante): ")
 
     if (tipo_visitante == "Adulto mayor"):
-        precio_descuento = precio_boleto * (1 - DESCUENTO_ADULTO)
+        descuento = precio_boleto * DESCUENTO_ADULTO
     elif (tipo_visitante == "Profesor"):
-        precio_descuento = precio_boleto * (1 - DESCUENTO_PROFESOR)
+        descuento = precio_boleto * DESCUENTO_PROFESOR
     elif (tipo_visitante == "Estudiante"):
-            precio_descuento = precio_boleto * (1 - DESCUENTO_ESTUDIANTE)
+        descuento = precio_boleto * DESCUENTO_ESTUDIANTE
     else:
-        precio_descuento = precio_boleto * 1         
+        descuento = 0      
 
+    precio_descuento = precio_boleto - descuento
     total_general = total_general + precio_descuento
+
+    print(f"Visitante\tSubtotal\tDescuento\tTotal\tAcumulado")
+    print(f"Visitante {i}\t{precio_boleto}\t\t-{descuento:.2f}\t\t{precio_descuento}\t${total_general}")
+
     i += 1
 
+    
 print(f"\nTotal a pagar con descuento: {total_general}")
