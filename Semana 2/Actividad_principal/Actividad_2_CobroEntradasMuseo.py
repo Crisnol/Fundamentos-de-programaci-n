@@ -27,11 +27,12 @@ while (i <= num_visitantes):
     elif(edad <= 17 and edad >= 3):
         precio_boleto = PRECIO_MENOR_EDAD
     elif(edad < 0):
-        print("Edad incorrecta, error en el sistema")
+        print("Edad incorrecta, error en el sistema\nVuelve a ejutar el programa")
         break 
     else:
-        print(f"Visitante\tSubtotal\tDescuento\tTotal\tAcumulado")
-        print(f"Visitante {i}\t{precio_boleto}\t\t-{descuento:.2f}\t\t{precio_descuento}\t${total_general}")
+        precio_boleto = PRECIO_MENOR_3
+        print(f"|Visitante|\t|Subtotal|\t|Descuento|\t|Total|\t|Total General|")
+        print(f"Visitante {i}\t {precio_boleto}\t\t {0}\t\t {0}\t ${total_general}")
         i += 1
         continue
     
@@ -49,10 +50,10 @@ while (i <= num_visitantes):
     precio_descuento = precio_boleto - descuento
     total_general = total_general + precio_descuento
 
-    print(f"Visitante\tSubtotal\tDescuento\tTotal\tAcumulado")
-    print(f"Visitante {i}\t{precio_boleto}\t\t-{descuento:.2f}\t\t{precio_descuento}\t${total_general}")
-
+    print(f"|Visitante|\t|Subtotal|\t|Descuento|\t|Total|\t|Total General|")
+    print(f"Visitante {i}\t ${precio_boleto}\t\t -{descuento:.2f}\t\t ${precio_descuento:.2f}\t ${total_general}")
+        
     i += 1
 
     
-print(f"\nTotal a pagar con descuento: {total_general}")
+print(f"\nTotal a pagar es de: ${total_general}")

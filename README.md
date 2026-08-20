@@ -3,7 +3,16 @@ Este archivo va a contener la descripcion de la estructura de al materia de funt
 
 La estructura para las actividades semanales va estar organizada por la carpetas de cada semana y dentro de esta va haber otras carpetas para la actividad principal y actividad extra:
 
-Archivos:       
+Archivos Evaluables por Semana:
 
-    1.Actividad 1 Calculadora de tiempo
-    2.extras_semanal
+**Semana 1**
+
+    1.Actividad 1 Calculadora de tiempo.py
+    2.extras_semanal1.ipynb
+
+**Semana 2**
+
+    3.Actividad 2 Cobro Entradas Museo.py
+    4.extras_semanal2.ipynb
+
+
