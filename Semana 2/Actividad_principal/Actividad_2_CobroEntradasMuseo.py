@@ -32,7 +32,7 @@ while (i <= num_visitantes):
     else:
         precio_boleto = PRECIO_MENOR_3
         print(f"|Visitante|\t|Subtotal|\t|Descuento|\t|Total|\t|Total General|")
-        print(f"Visitante {i}\t {precio_boleto}\t\t {0}\t\t {0}\t ${total_general}")
+        print(f"Visitante {i}\t ${precio_boleto}\t\t ${0}\t\t ${0}\t ${total_general}")
         i += 1
         continue
     
