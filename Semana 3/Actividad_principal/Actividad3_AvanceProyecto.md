@@ -26,7 +26,6 @@ Esta semana **no introduce temas nuevos**: se integran los **Temas 1 al 8** vist
 | 8 | Estructura de repetición `for` (recorridos conocidos). |
 
 ---
-
 ## 2. Los 8 requerimientos técnicos obligatorios (agenda sección 4)
 
 | # | Requerimiento | Especificación exacta |
