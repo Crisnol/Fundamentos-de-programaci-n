@@ -56,7 +56,11 @@ while True:
                         cupos = 5
                         print(f"{i}) #Nombre de la organización (Cupos: {cupos}): ")
                     
+                    print(f"{i + 1}) Salir")
                     opcionOrg = int(input("Elije una organizaciones para ver su información:"))
+                    
+                    if(opcionOrg == i+1):
+                        break
                     #ToDo: Falta organizar la recuperación de datos de cada organizaicion para imprimir
             
             elif(opcion == 2):

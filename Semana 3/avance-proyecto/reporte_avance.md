@@ -212,7 +212,7 @@ FIN
         SINO
 
         FIN SI
- 
+  
     FIN MIENTRAS
 ```
  
