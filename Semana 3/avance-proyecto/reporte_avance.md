@@ -107,7 +107,7 @@ Para una correcta estructuración de cada entrada se necesitan datos primordiale
 
 Evalúa el tipo de rol para mostrar un menú dedicado con funciones especiales para cada uno.
 
-- Ejemplo: Si la opción es '1', invoca las funciones del estudiante; si es '2', abre el panel de la empresa; si no coincide con ninguna, despliega un mensaje de comando inválido.
+- Ejemplo: Si el rol es 'Alumno', invoca las funciones del estudiante; si es 'Organización', abre el panel de la organización; si no coincide con ninguna, despliega un mensaje de comando inválido.
 
 #### if - else — Validación estricta de vacantes
 
@@ -143,3 +143,205 @@ Encierra las capturas de datos numéricos (como las horas trabajadas). Si el alu
 #### for en listas de diccionarios
 
 Recorre colecciones de datos para extraer, filtrar o mostrar información en pantalla, como por ejemplo, recorrer el arreglo de organizaciones para imprimir el listado, nombre y vacantes restantes.
+
+# Pseudocódigo Formal - Sistema de Gestión de Servicio Social
+ 
+## 1. Algoritmo principal
+ 
+```
+INICIO
+ 
+    MIENTRAS Verdadero HACER
+ 
+        MOSTRAR "1) Iniciar Sesión"
+        MOSTRAR "2) Crear Cuenta"
+        MOSTRAR "3) Salir del programa"
+        LEER opcion
+ 
+        SI opcion NO ES ENTERO ENTONCES
+            MOSTRAR "Ingrese un número válido"
+            CONTINUAR
+        FIN SI
+ 
+        SEGÚN opcion HACER
+ 
+            CASO 1:
+                cuentaActiva = IniciarSesion()
+                SI cuentaActiva == NULO ENTONCES
+                    CONTINUAR
+                FIN SI
+ 
+            CASO 2:
+                cuentaActiva = CrearCuenta()
+ 
+            CASO 3:
+                SALIR DEL PROGRAMA
+ 
+            OTRO CASO:
+                MOSTRAR "Ingrese una opción válida"
+                CONTINUAR
+ 
+        FIN SEGÚN
+ 
+        MenuPrincipal(cuentaActiva)
+ 
+    FIN MIENTRAS
+ 
+FIN
+```
+ 
+---
+ 
+## 2. Iniciar sesión
+ 
+ 
+``` 
+    MIENTRAS Verdadero HACER
+        MOSTRAR "Para iniciar sesión ingresa tu matrícula"
+        LEER matricula
+ 
+        SI matricula == "" ENTONCES
+            MOSTRAR "Matrícula incorrecta"
+            CONTINUAR
+        FIN SI
+ 
+        cuenta = BUSCAR matricula EN listaCuentas
+ 
+        SI cuenta == NULO ENTONCES
+            MOSTRAR "No existe una cuenta con esa matrícula"
+        SINO
+
+        FIN SI
+ 
+    FIN MIENTRAS
+```
+ 
+---
+ 
+## 3. Crear cuenta
+ 
+ 
+```
+    MIENTRAS Verdadero HACER
+        MOSTRAR "Para crear una nueva cuenta ingresa los siguientes datos"
+        LEER matricula
+        LEER nombre
+        LEER carrera
+ 
+        SI matricula == "" O LONGITUD(matricula) != 10 ENTONCES
+            MOSTRAR "La matrícula debe tener 10 caracteres"
+            CONTINUAR
+        FIN SI
+ 
+        SI nombre == "" O carrera == "" ENTONCES
+            MOSTRAR "Nombre y carrera son obligatorios"
+            CONTINUAR
+        FIN SI
+ 
+        nuevaCuenta = NUEVA Cuenta(matricula, nombre, carrera, rol = "Alumno")
+ 
+    FIN MIENTRAS
+```
+ 
+---
+ 
+## 4. Menú principal (según rol)
+ 
+``` 
+    MIENTRAS Verdadero HACER
+ 
+        SEGÚN cuenta.rol HACER
+ 
+            CASO "Alumno":
+                salir = MenuAlumno(cuenta)
+                SI salir ENTONCES ROMPER FIN SI
+ 
+            CASO "Organización":
+                salir = MenuOrganizacion(cuenta)
+                SI salir ENTONCES ROMPER FIN SI
+ 
+            CASO "Admin":
+                salir = MenuAdmin(cuenta)
+                SI salir ENTONCES ROMPER FIN SI
+ 
+        FIN SEGÚN
+ 
+    FIN MIENTRAS
+```
+ 
+---
+ 
+## 5. Menú Alumno
+ 
+``` 
+    MOSTRAR "Bienvenido al sistema"
+    MOSTRAR "1) Organizaciones"
+    MOSTRAR "2) Mi servicio"
+    MOSTRAR "3) Salir de la cuenta"
+    LEER opcion
+ 
+    SEGÚN opcion HACER
+ 
+        CASO 1:
+            VerOrganizaciones()
+            DEVOLVER Falso
+ 
+        CASO 2:
+            MenuServicio(cuenta)
+            DEVOLVER Falso
+ 
+        CASO 3:
+            MOSTRAR "Saliendo de la cuenta..."
+            DEVOLVER Verdadero
+ 
+        OTRO CASO:
+            MOSTRAR "Ingrese una opción válida"
+            DEVOLVER Falso
+ 
+    FIN SEGÚN
+ 
+ 
+FUNCION VerOrganizaciones()
+ 
+    MOSTRAR "Organizaciones Socias"
+    PARA CADA org EN listaOrganizaciones HACER
+        MOSTRAR org.nombre, " (Cupos: ", org.cupos, ")"
+    FIN PARA
+ 
+    LEER opcionOrg
+    
+FIN FUNCION
+ 
+ 
+FUNCION MenuServicio(cuenta: Cuenta)
+ 
+    MOSTRAR "Mi servicio"
+    MOSTRAR "Organización actual: ", cuenta.organizacionActual
+    MOSTRAR "Horas acumuladas: ", cuenta.horasAcumuladas, " hrs"
+    MOSTRAR "1) Registrar un nuevo día"
+    MOSTRAR "2) Ver detalles de mi servicio"
+    LEER opcionServicio
+ 
+    SEGÚN opcionServicio HACER
+ 
+        CASO 1:
+            LEER fecha
+            LEER horas
+            LEER descripcion
+            registro = NUEVO RegistroBitacora(fecha, horas, descripcion)
+            AGREGAR registro A cuenta.bitacora
+            cuenta.horasAcumuladas = cuenta.horasAcumuladas + horas
+ 
+        CASO 2:
+            PARA CADA registro EN cuenta.bitacora HACER
+                MOSTRAR registro.fecha, " - ", registro.horas, "hrs - ", registro.descripcion
+            FIN PARA
+ 
+        OTRO CASO:
+            MOSTRAR "Ingrese una opción válida"
+ 
+    FIN SEGÚN
+ 
+FIN FUNCION
+```
+ 
