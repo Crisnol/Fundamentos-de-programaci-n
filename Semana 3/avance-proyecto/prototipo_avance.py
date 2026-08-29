@@ -13,6 +13,7 @@ while True:
             print("Para Iniciar Sesion Ingresa tu matricula")
             matricula = input("Matricula: ")
 
+            # Comprobación de la matricula
             if matricula == "":
                 print("Matricula incorrecta")
             elif len(matricula) != 10:
@@ -28,6 +29,7 @@ while True:
             nombre = input("Nombre: ")
             carrera = input("Carrera: ")
         
+            # Comprobación de datos ingresado correctamente
             if ((matricula == "" or  len(matricula) !=  10) or nombre == "" or carrera == ""):
                 print("Algun dato incorrecto, porfavor ingresa correctamente.")
             else:
@@ -55,14 +57,18 @@ while True:
                 # Opción para ver las organizaciones en un listado
                 while True:
                     print("Organización Socias")
+                    
                     cantOrganizaciones = 5
+                    
+                    # for para recorrer la lista de las organizaciones
                     for i in range(1, cantOrganizaciones + 1):
                         cupos = 5
                         print(f"{i}) #Nombre de la organización (Cupos: {cupos})")
-
+                   
                     print(f"{cantOrganizaciones + 1}) Salir")
                     opcionOrg = int("Elije una organización para ver su información: ")
 
+                    # Seleccion de opciones para ver las organizaciones o salir
                     if opcionOrg == cantOrganizaciones + 1:
                         break
                     elif 1 <= opcionOrg <= cantOrganizaciones:
@@ -75,6 +81,7 @@ while True:
                 orgAlumno = "Perritos A Salvo"
                 horasAcumuladas = 140
 
+                # Menú del Servicio social
                 while True:
                     print("\nMi servicio")
                     print(f"Organización actual: {orgAlumno}")
@@ -86,6 +93,8 @@ while True:
 
                     opcionServicio = int("Opción: ")
 
+                    #if para las opciones del servico
+                    # 1 Ingresa un nuevo registro en la bitacora
                     if opcionServicio == 1:
                         print("Bitacora")
                         fecha = input("Ingresa la fecha: ")
@@ -99,7 +108,8 @@ while True:
                             print(f"Fecha: {fecha}")
                             print(f"Horas: {horas}")
                             print(f"Descripción: {descripcion}")
-
+                    
+                    # 2 Ver detalles del servicio
                     elif opcionServicio == 2:
                         print("Detalles de mi servicio")
                         print(f"Organización: {orgAlumno}")
@@ -116,7 +126,7 @@ while True:
             else:
                 print("Ingrese una opción valida")
                 continue
-
+        
         elif rol == "Organización":
             # ToDo: Menu de org
             print()
