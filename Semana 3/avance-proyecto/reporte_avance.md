@@ -144,204 +144,151 @@ Encierra las capturas de datos numéricos (como las horas trabajadas). Si el alu
 
 Recorre colecciones de datos para extraer, filtrar o mostrar información en pantalla, como por ejemplo, recorrer el arreglo de organizaciones para imprimir el listado, nombre y vacantes restantes.
 
-# Pseudocódigo Formal - Sistema de Gestión de Servicio Social
+# Pseudocódigo - Sistema de Gestión de Servicio Social
  
-## 1. Algoritmo principal
- 
-```
-INICIO
- 
-    MIENTRAS Verdadero HACER
- 
-        MOSTRAR "1) Iniciar Sesión"
-        MOSTRAR "2) Crear Cuenta"
-        MOSTRAR "3) Salir del programa"
-        LEER opcion
- 
-        SI opcion NO ES ENTERO ENTONCES
-            MOSTRAR "Ingrese un número válido"
-            CONTINUAR
-        FIN SI
- 
-        SEGÚN opcion HACER
- 
-            CASO 1:
-                cuentaActiva = IniciarSesion()
-                SI cuentaActiva == NULO ENTONCES
-                    CONTINUAR
-                FIN SI
- 
-            CASO 2:
-                cuentaActiva = CrearCuenta()
- 
-            CASO 3:
-                SALIR DEL PROGRAMA
- 
-            OTRO CASO:
-                MOSTRAR "Ingrese una opción válida"
-                CONTINUAR
- 
-        FIN SEGÚN
- 
-        MenuPrincipal(cuentaActiva)
- 
-    FIN MIENTRAS
- 
-FIN
-```
- 
----
- 
-## 2. Iniciar sesión
- 
- 
-``` 
-    MIENTRAS Verdadero HACER
-        MOSTRAR "Para iniciar sesión ingresa tu matrícula"
-        LEER matricula
- 
-        SI matricula == "" ENTONCES
-            MOSTRAR "Matrícula incorrecta"
-            CONTINUAR
-        FIN SI
- 
-        cuenta = BUSCAR matricula EN listaCuentas
- 
-        SI cuenta == NULO ENTONCES
-            MOSTRAR "No existe una cuenta con esa matrícula"
-        SINO
 
-        FIN SI
-  
-    FIN MIENTRAS
-```
- 
----
- 
-## 3. Crear cuenta
- 
- 
-```
+
+INICIO
+
     MIENTRAS Verdadero HACER
-        MOSTRAR "Para crear una nueva cuenta ingresa los siguientes datos"
-        LEER matricula
-        LEER nombre
-        LEER carrera
- 
-        SI matricula == "" O LONGITUD(matricula) != 10 ENTONCES
-            MOSTRAR "La matrícula debe tener 10 caracteres"
-            CONTINUAR
+        IMPRIMIR "1) Iniciar Sesión"
+        IMPRIMIR "2) Crear Cuenta"
+        IMPRIMIR "3) Salir del programa"
+        IMPRIMIR "Opción: "
+        LEER opcion
+
+        SI opcion == 1 ENTONCES
+            MIENTRAS Verdadero HACER
+                IMPRIMIR "Para Iniciar Sesion Ingresa tu matricula"
+                IMPRIMIR "Matricula: "
+                LEER matricula
+
+                SI matricula == "" ENTONCES
+                    IMPRIMIR "Matricula incorrecta"
+                SINO SI LONGITUD(matricula) != 10 ENTONCES
+                    IMPRIMIR "La matrícula debe tener 10 dígitos."
+                SINO
+                    ROMPER BUCLE
+                FIN SI
+            FIN MIENTRAS
+
+        SINO SI opcion == 2 ENTONCES
+            MIENTRAS Verdadero HACER
+                IMPRIMIR "Para crear una nueva cuenta ingresa los siguientes datos."
+                IMPRIMIR "Matricula: "
+                LEER matricula
+                IMPRIMIR "Nombre: "
+                LEER nombre
+                IMPRIMIR "Carrera: "
+                LEER carrera
+                
+                SI matricula == "" O LONGITUD(matricula) != 10 O nombre == "" O carrera == "" ENTONCES
+                    IMPRIMIR "Algun dato incorrecto, porfavor ingresa correctamente."
+                SINO
+                    ROMPER BUCLE
+                FIN SI
+            FIN MIENTRAS
+
+        SINO SI opcion == 3 ENTONCES
+            ROMPER BUCLE
+        SINO
+            IMPRIMIR "Ingrese una opción valida"
+            CONTINUAR BUCLE
         FIN SI
- 
-        SI nombre == "" O carrera == "" ENTONCES
-            MOSTRAR "Nombre y carrera son obligatorios"
-            CONTINUAR
-        FIN SI
- 
-        nuevaCuenta = NUEVA Cuenta(matricula, nombre, carrera, rol = "Alumno")
- 
+
+        MIENTRAS Verdadero HACER
+            rol = "Alumno"
+
+            SI rol == "Alumno" ENTONCES
+                IMPRIMIR "Bienvenido al sistema"
+                IMPRIMIR "1) Organizaciones"
+                IMPRIMIR "2) Mi servicio"
+                IMPRIMIR "3) Salir de la cuenta"
+                IMPRIMIR "Opción: "
+                LEER opcionModulo
+
+                SI opcionModulo == 1 ENTONCES
+                    MIENTRAS Verdadero HACER
+                        IMPRIMIR "Organización Socias"
+                        cantOrganizaciones = 5
+                        
+                        PARA i DESDE 1 HASTA cantOrganizaciones HACER
+                            cupos = 5
+                            IMPRIMIR i + ") #Nombre de la organización (Cupos: " + cupos + ")"
+                        FIN PARA
+
+                        IMPRIMIR (cantOrganizaciones + 1) + ") Salir"
+                        IMPRIMIR "Elije una organización para ver su información: "
+                        LEER opcionOrg
+
+                        SI opcionOrg == (cantOrganizaciones + 1) ENTONCES
+                            ROMPER BUCLE
+                        SINO SI opcionOrg >= 1 Y opcionOrg <= cantOrganizaciones ENTONCES
+                            IMPRIMIR "Mostrando información de la organización " + opcionOrg + "..."
+                        SINO
+                            IMPRIMIR "Ingrese una opción válida."
+                        FIN SI
+                    FIN MIENTRAS
+
+                SINO SI opcionModulo == 2 ENTONCES
+                    orgAlumno = "Perritos A Salvo"
+                    horasAcumuladas = 140
+
+                    MIENTRAS Verdadero HACER
+                        IMPRIMIR "Mi servicio"
+                        IMPRIMIR "Organización actual: " + orgAlumno
+                        IMPRIMIR "Horas acumuladas: " + horasAcumuladas + " hrs"
+
+                        IMPRIMIR "1) Registrar un nuevo dia"
+                        IMPRIMIR "2) Ver detalles de mi servicio"
+                        IMPRIMIR "3) Regresar"
+                        IMPRIMIR "Opción: "
+                        LEER opcionServicio
+
+                        SI opcionServicio == 1 ENTONCES
+                            IMPRIMIR "Bitacora"
+                            IMPRIMIR "Ingresa la fecha: "
+                            LEER fecha
+                            IMPRIMIR "Ingresa las horas acumuladas (entero): "
+                            LEER horas
+                            IMPRIMIR "Ingresa las actividades realizadas: "
+                            LEER descripcion
+
+                            SI fecha == "" O descripcion == "" ENTONCES
+                                IMPRIMIR "La fecha y la descripción no pueden estar vacías."
+                            SINO
+                                IMPRIMIR "Registro guardado exitosamente."
+                                IMPRIMIR "Fecha: " + fecha
+                                IMPRIMIR "Horas: " + horas
+                                IMPRIMIR "Descripción: " + descripcion
+                            FIN SI
+
+                        SINO SI opcionServicio == 2 ENTONCES
+                            IMPRIMIR "Detalles de mi servicio"
+                            IMPRIMIR "Organización: " + orgAlumno
+                            IMPRIMIR "Horas acumuladas: " + horasAcumuladas + " hrs"
+
+                        SINO SI opcionServicio == 3 ENTONCES
+                            ROMPER BUCLE
+                        SINO
+                            IMPRIMIR "Ingrese una opción valida"
+                        FIN SI
+                    FIN MIENTRAS
+
+                SINO SI opcionModulo == 3 ENTONCES
+                    IMPRIMIR "Saliendo de la cuenta..."
+                    ROMPER BUCLE
+                SINO
+                    IMPRIMIR "Ingrese una opción valida"
+                FIN SI
+
+            SINO SI rol == "Organización" ENTONCES
+                IMPRIMIR ""
+            SINO SI rol == "Admin" ENTONCES
+                IMPRIMIR ""
+            FIN SI
+            
+        FIN MIENTRAS
+        
     FIN MIENTRAS
-```
- 
----
- 
-## 4. Menú principal (según rol)
- 
-``` 
-    MIENTRAS Verdadero HACER
- 
-        SEGÚN cuenta.rol HACER
- 
-            CASO "Alumno":
-                salir = MenuAlumno(cuenta)
-                SI salir ENTONCES ROMPER FIN SI
- 
-            CASO "Organización":
-                salir = MenuOrganizacion(cuenta)
-                SI salir ENTONCES ROMPER FIN SI
- 
-            CASO "Admin":
-                salir = MenuAdmin(cuenta)
-                SI salir ENTONCES ROMPER FIN SI
- 
-        FIN SEGÚN
- 
-    FIN MIENTRAS
-```
- 
----
- 
-## 5. Menú Alumno
- 
-``` 
-    MOSTRAR "Bienvenido al sistema"
-    MOSTRAR "1) Organizaciones"
-    MOSTRAR "2) Mi servicio"
-    MOSTRAR "3) Salir de la cuenta"
-    LEER opcion
- 
-    SEGÚN opcion HACER
- 
-        CASO 1:
-            VerOrganizaciones()
-            DEVOLVER Falso
- 
-        CASO 2:
-            MenuServicio(cuenta)
-            DEVOLVER Falso
- 
-        CASO 3:
-            MOSTRAR "Saliendo de la cuenta..."
-            DEVOLVER Verdadero
- 
-        OTRO CASO:
-            MOSTRAR "Ingrese una opción válida"
-            DEVOLVER Falso
- 
-    FIN SEGÚN
- 
- 
-FUNCION VerOrganizaciones()
- 
-    MOSTRAR "Organizaciones Socias"
-    PARA CADA org EN listaOrganizaciones HACER
-        MOSTRAR org.nombre, " (Cupos: ", org.cupos, ")"
-    FIN PARA
- 
-    LEER opcionOrg
-    
-FIN FUNCION
- 
- 
-FUNCION MenuServicio(cuenta: Cuenta)
- 
-    MOSTRAR "Mi servicio"
-    MOSTRAR "Organización actual: ", cuenta.organizacionActual
-    MOSTRAR "Horas acumuladas: ", cuenta.horasAcumuladas, " hrs"
-    MOSTRAR "1) Registrar un nuevo día"
-    MOSTRAR "2) Ver detalles de mi servicio"
-    LEER opcionServicio
- 
-    SEGÚN opcionServicio HACER
- 
-        CASO 1:
-            LEER fecha
-            LEER horas
-            LEER descripcion
-            registro = NUEVO RegistroBitacora(fecha, horas, descripcion)
-            AGREGAR registro A cuenta.bitacora
-            cuenta.horasAcumuladas = cuenta.horasAcumuladas + horas
- 
-        CASO 2:
-            PARA CADA registro EN cuenta.bitacora HACER
-                MOSTRAR registro.fecha, " - ", registro.horas, "hrs - ", registro.descripcion
-            FIN PARA
- 
-        OTRO CASO:
-            MOSTRAR "Ingrese una opción válida"
- 
-    FIN SEGÚN
- 
-FIN FUNCION
-```
- 
+FIN

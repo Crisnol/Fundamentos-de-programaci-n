@@ -1,46 +1,50 @@
 #Cristian Alejandro Nolasco Vargas
 
 while True:
-    #Primer menu registro
+    # Primer menú de registro
     print("1) Iniciar Sesión")
     print("2) Crear Cuenta")
     print("3) Salir del programa")
     opcion = int(input("Opción: "))
 
-    if(opcion == 1):
-        #if para inciar sesion
+    if opcion == 1:
+        # Inicio de sesión
         while True:
             print("Para Iniciar Sesion Ingresa tu matricula")
-            matricula = input("Matricula: ") 
-            
-            if(matricula == ""):
-                print("Matricula incorrecta") 
+            matricula = input("Matricula: ")
+
+            if matricula == "":
+                print("Matricula incorrecta")
+            elif len(matricula) != 10:
+                print("La matrícula debe tener 10 dígitos.")
             else:
-                break          
-    elif(opcion == 2):
-        # if para crear cuenta
+                break
+
+    elif opcion == 2:
+        # Crear cuenta
         while True:
             print("Para crear una nueva cuenta ingresa los siguientes datos.")
             matricula = input("Matricula: ")
             nombre = input("Nombre: ")
             carrera = input("Carrera: ")
         
-            if ((matricula == "" and  len(matricula) !=  10) and nombre == "" and carrera == ""):
+            if ((matricula == "" or  len(matricula) !=  10) or nombre == "" or carrera == ""):
                 print("Algun dato incorrecto, porfavor ingresa correctamente.")
             else:
                 break
-    
-    elif(opcion == 3):
+
+    elif opcion == 3:
         break
     else:
         print("Ingrese una opción valida")
         continue
-    
-    #while para el menu dentro de la app
-    while True: 
-        #Rol hardcodeado pero lo debe recuperar con la cuenta
+
+    # Menú dentro de la app
+    while True:
+        # Rol hardcodeado, pero lo debe recuperar con la cuenta
         rol = "Alumno"
-        if(rol == "Alumno"):
+
+        if rol == "Alumno":
             print("\nBienvenido al sistema")
             print("1) Organizaciones")
             print("2) Mi servicio")
@@ -48,65 +52,74 @@ while True:
             opcion = int(input("Opción: "))
             
             if(opcion == 1):
-                #Opcion para ver las organizaciones en un listado
+                # Opción para ver las organizaciones en un listado
                 while True:
                     print("Organización Socias")
                     cantOrganizaciones = 5
-                    for i in range (1,cantOrganizaciones + 1):
+                    for i in range(1, cantOrganizaciones + 1):
                         cupos = 5
-                        print(f"{i}) #Nombre de la organización (Cupos: {cupos}): ")
-                    
-                    print(f"{i + 1}) Salir")
-                    opcionOrg = int(input("Elije una organizaciones para ver su información:"))
-                    
-                    if(opcionOrg == i+1):
+                        print(f"{i}) #Nombre de la organización (Cupos: {cupos})")
+
+                    print(f"{cantOrganizaciones + 1}) Salir")
+                    opcionOrg = int("Elije una organización para ver su información: ")
+
+                    if opcionOrg == cantOrganizaciones + 1:
                         break
-                    #ToDo: Falta organizar la recuperación de datos de cada organizaicion para imprimir
-            
-            elif(opcion == 2):
-                #Opción para ver el servicio social del alumno
-                #Variables harcodeadas para el avance, ToDo: recuperar de manera dinamica
+                    elif 1 <= opcionOrg <= cantOrganizaciones:
+                        print(f"Mostrando información de la organización {opcionOrg}...")
+                    else:
+                        print("Ingrese una opción válida.")
+
+            elif opcion == 2:
+                # Opción para ver el servicio social del alumno
                 orgAlumno = "Perritos A Salvo"
                 horasAcumuladas = 140
-                
+
                 while True:
-                    print("Mi servicio")
+                    print("\nMi servicio")
                     print(f"Organización actual: {orgAlumno}")
                     print(f"Horas acumuladas: {horasAcumuladas} hrs")
-                    
+
                     print("1) Registrar un nuevo dia")
                     print("2) Ver detalles de mi servicio")
-                    
-                    opcionServicio = int(input("Opción: "))
-                    
-                    if(opcionServicio == 1):
-                        #opción para ver registrar
+                    print("3) Regresar")
+
+                    opcionServicio = int("Opción: ")
+
+                    if opcionServicio == 1:
                         print("Bitacora")
-                        fecha = int(input("Ingresa la fecha: "))
-                        horas = int(input("Ingresa las horas acumuladas: "))
+                        fecha = input("Ingresa la fecha: ")
+                        horas = int("Ingresa las horas acumuladas (entero): ")
                         descripcion = input("Ingresa las actividades realizadas: ")
-                        
-                    elif(opcionServicio == 2):
-                        #ToDo: Muestreo de datos especificios del servicio
-                        print
+
+                        if fecha == "" or descripcion == "":
+                            print("La fecha y la descripción no pueden estar vacías.")
+                        else:
+                            print("Registro guardado exitosamente.")
+                            print(f"Fecha: {fecha}")
+                            print(f"Horas: {horas}")
+                            print(f"Descripción: {descripcion}")
+
+                    elif opcionServicio == 2:
+                        print("Detalles de mi servicio")
+                        print(f"Organización: {orgAlumno}")
+                        print(f"Horas acumuladas: {horasAcumuladas} hrs")
+
+                    elif opcionServicio == 3:
+                        break
                     else:
                         print("Ingrese una opción valida")
-                        continue
-                    
-                    
-            elif(opcion == 3):
+
+            elif opcion == 3:
                 print("Saliendo de la cuenta...")
                 break
             else:
                 print("Ingrese una opción valida")
                 continue
-            
-        elif(rol == "Organización"):
-            #ToDo: Menu de org
+
+        elif rol == "Organización":
+            # ToDo: Menu de org
             print()
-        elif(rol == "Admin"): 
-            #ToDo: Menu de admin
+        elif rol == "Admin":
+            # ToDo: Menu de admin
             print()
-        
-        
-        

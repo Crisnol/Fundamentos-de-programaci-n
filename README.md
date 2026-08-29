@@ -15,4 +15,10 @@ Archivos Evaluables por Semana:
     3.Actividad 2 Cobro Entradas Museo.py
     4.extras_semanal2.ipynb
 
+**Semana 3**
+    5.reporte_avance.md
+    6.prototipo_avance.py
+    7.diagrama_flujo.png
+    8.practica_semana3.ipynb
+
 
