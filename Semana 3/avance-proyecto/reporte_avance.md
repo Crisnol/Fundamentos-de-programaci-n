@@ -91,7 +91,7 @@ Para una correcta estructuración de cada entrada se necesitan datos primordiale
 | >= | Mayor o igual | Comprobación de liberación de servicio. | Evalúa si el estudiante alcanzó o superó la cuota institucional (horas_acumuladas >= 480) |
 | > | Mayor | Control de cupos en la organización. | Evalúa si la entidad socio-formadora cuenta con plazas libres (cupos_disponibles > 0) antes de procesar una inscripción |
 
-### Operadores Lógicos y de Pertenencia
+### Operadores Lógicos
 
 | Símbolo | Lógica | Aplicación en el código | Justificación |
 |---|---|---|---|
