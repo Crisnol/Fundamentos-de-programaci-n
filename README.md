@@ -16,6 +16,7 @@ Archivos Evaluables por Semana:
     4.extras_semanal2.ipynb
 
 **Semana 3**
+
     5.reporte_avance.md
     6.prototipo_avance.py
     7.diagrama_flujo.png
