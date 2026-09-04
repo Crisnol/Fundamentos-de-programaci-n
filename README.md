@@ -22,4 +22,9 @@ Archivos Evaluables por Semana:
     7.diagrama_flujo.png
     8.practica_semana3.ipynb
 
+**Semana 4**
+
+    9.TablaPitagoras_actividad4.py
+    10.extras_semana4.ipynb
+    
 
