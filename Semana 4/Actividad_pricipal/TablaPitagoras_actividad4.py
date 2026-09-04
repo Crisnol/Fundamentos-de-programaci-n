@@ -18,12 +18,14 @@ def generacionTabla():
 
 # Función que imprime la tabla con formato
 def printTabla(matriz_tablaPitagorica):
+    
     # Impresion columnas 1-10
     print("\t", end="")
     for i in range(1,11):
         print(f"{i}", end= "\t")
     print()
     
+    # Ciclo for para imprimir la tabla
     for f in range(len(matriz_tablaPitagorica)):
         #Impresion filas 1-10
         print(f + 1, end="\t|")
@@ -31,7 +33,8 @@ def printTabla(matriz_tablaPitagorica):
                 print(matriz_tablaPitagorica[f][c], end= "\t")
         print()
 
-def consultar_producto(tabla, renglon, columna):
+# Función para obtner el valor de la interseccion de la columna y fila 
+def consultar_producto(matriz_tablaPitagorica, num1, num2):
     valor = matriz_tablaPitagorica[num1 - 1][num2-1]
     return valor
 
@@ -39,8 +42,16 @@ def consultar_producto(tabla, renglon, columna):
 matriz_tablaPitagorica = generacionTabla()
 printTabla(matriz_tablaPitagorica)
 
-num1 = int(input("Ingresa el primer factor (Columna) (1-10): "))
-num2 = int(input("Ingresa el segundo fator (Fila) (1-10): "))
+# Ciclo para la comprobacion de datos sin finalizar el programa
+while True:
+    num1 = int(input("Ingresa el primer factor (Columna) (1-10): "))
+    num2 = int(input("Ingresa el segundo fator (Fila) (1-10): "))
+    
+    # Comprobación de rango de los 2 numero ingresados por el usuario
+    if (num1 > 0 and num1<= 10) and (num2 > 0 and num2<= 10):
+        break
+    else:
+        print("Valores incorrectos asegurate de ingresar los datos correctamente\n")
 
 valor = consultar_producto(matriz_tablaPitagorica, num1, num2)
 
