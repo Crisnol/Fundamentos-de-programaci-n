@@ -26,5 +26,10 @@ Archivos Evaluables por Semana:
 
     9.TablaPitagoras_actividad4.py
     10.extras_semana4.ipynb
+
+**Semana 5**
+
+    11.Actividad4_menu_modular.ipynb
+    12.extras_semana5.ipynb
     
 
