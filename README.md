@@ -32,4 +32,7 @@ Archivos Evaluables por Semana:
     11.Actividad4_menu_modular.ipynb
     12.extras_semana5.ipynb
     
+**Semana 6**
+    [13.Bitacora Avance.ipynb](https://github.com/Crisnol/Fundamentos-de-programaci-n/blob/main/Semana%206/Certificado%20Cisco/Bitacora%20Avance.ipynb)
+
 
