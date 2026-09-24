@@ -1,0 +1,37 @@
+{
+    "1234567890": {
+        "matricula": "1234567890",
+        "nombre": "afalsdf",
+        "carrera": "asf",
+        "correo": "asldkf",
+        "rol": "Alumno"
+    },
+    "0987654321": {
+        "matricula": "0987654321",
+        "nombre": "Crisnol",
+        "carrera": "afds",
+        "correo": "asdfa",
+        "rol": "Alumno"
+    },
+    "1111111111": {
+        "matricula": "1111111111",
+        "nombre": "alsd",
+        "carrera": "afasd",
+        "correo": "afds",
+        "rol": "afads"
+    },
+    "7534389045": {
+        "matricula": "7534389045",
+        "nombre": "Crisnol",
+        "carrera": "IDS",
+        "correo": "ajlfskdjf@tecmilenio.mx",
+        "rol": "Alumno"
+    },
+    "2222222222": {
+        "matricula": "2222222222",
+        "nombre": "nose",
+        "carrera": "admin",
+        "correo": "222222222@tecmilenio.mx",
+        "rol": "Admin"
+    }
+}

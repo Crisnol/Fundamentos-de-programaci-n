@@ -1,0 +1,3 @@
+Linea 1: aprender Python
+Linea 2: menejar archivos
+Linea 3: completar el proyecto
