@@ -269,8 +269,18 @@ def escrituraArchivo():
             try:
                 with open(ruta_archivo, "r") as archivo:
                     data = json.load(archivo)
-                    
-                
+            
+                match nombre_archivo:
+                    case "Usuarios.json":
+                        print        
+                    case "Usuarios.json":
+                        print        
+                    case "Usuarios.json":
+                        print        
+                    case "Usuarios.json":
+                        print        
+                    case _:
+                        print
                    
                 break
             except FileNotFoundError:
