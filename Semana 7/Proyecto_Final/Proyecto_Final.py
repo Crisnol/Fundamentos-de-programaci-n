@@ -1,5 +1,4 @@
 #Cristian Alejandro Nolasco Vargas
-# TODO revisar mi servicio social/ al añadir bitacora
 # TODO añadir comprobaciones de que se seleccione un rol especifico
 
 import time
@@ -58,8 +57,8 @@ def iniciarSesion():
             break
 
 ## Funcion ocupada en Rol Alumno / Admin        
-def crearCuenta(mat = " "):
-    if mat == "":
+def crearCuenta(rolUsuario = "Alumno"):
+    if rolUsuario == "Alumno":
         global matricula
     usuarios = {}
     
@@ -68,6 +67,8 @@ def crearCuenta(mat = " "):
             usuarios = json.load(archivo)
         except json.JSONDecodeError:
             usuarios = {}
+            
+    print("------ Crear Cuenta ------")
     
     while True:
         print("Para crear una nueva cuenta ingresa los siguientes datos.")
@@ -82,7 +83,9 @@ def crearCuenta(mat = " "):
         if matricula in usuarios:
             print("Esa matrícula ya está registrada en el sistema.")
             continue
-    
+        
+        pantalla_carga("Revisando datos")
+        
         # Comprobación de datos ingresado correctamente
         if ((matricula == "" or  len(matricula) !=  10) or nombre == "" or carrera == ""):
             print("Algun dato incorrecto, porfavor ingresa correctamente.")
@@ -114,7 +117,7 @@ def registro_acceso_cuenta():
                 break
             case 2:
                 # Crear cuenta
-                crearCuenta()
+                crearCuenta(rolUsuario = "Alumno")
                 break
             case 3:
                 # Salir del programa
@@ -159,6 +162,18 @@ def obtenerNombreOrganizacion(id_org):
         pass
     return id_org
 
+## Funcion para crear la fecha estructura
+def estructuraFecha():
+    
+    print("Ingresa la fecha (ej. DD/MM/AAAA): ")
+    dia = input("Ingresa el dia: ") 
+    mes = int(input("Ingresa el mes (numero)"))
+    año = int(input("Ingresa el año (AAAA)"))
+
+    fechaTupla = (dia,mes,año)
+    
+    return fechaTupla
+    
 # Funciones Acciones Programa
 ## Funciones Rol Alumno ----------------
 def calcularHorasAcumuladas(matricula):
@@ -179,6 +194,9 @@ def calcularHorasAcumuladas(matricula):
 def impresionOrganizaciones():
     while True:
         ruta_archivo = DIR_BASE / "data" / "Organizaciones.json"
+        
+        pantalla_carga("Obteniendo Datos")
+
         try:
             with open(ruta_archivo, "r", encoding="utf-8") as archivo:
                 data = json.load(archivo)
@@ -260,9 +278,9 @@ def servicioSocial():
         horas_acumuladas = calcularHorasAcumuladas(matricula)
         meta_horas = 480  # Horas requeridas estándar para servicio social
 
-        print("\n==========================================")
+        print("\n__________________________________________")
         print("             MI SERVICIO SOCIAL           ")
-        print("==========================================")
+        print("____________________________________________")
         print(f"Organización:   {nombre_org} (ID: {id_org})")
         print(f"Horas acumuladas: {horas_acumuladas} / {meta_horas} hrs")
         print("------------------------------------------")
@@ -279,8 +297,9 @@ def servicioSocial():
         match opcionServicio:
             case 1:
                 # Llama a tu función existente adaptada
-                crearBitacoraUsuario(mat=matricula)
+                crearBitacoraUsuario(rol="Alumno")
             case 2:
+                pantalla_carga("Obteniendo Datos")
                 print("\n--- DETALLES DE MI SERVICIO SOCIAL ---")
                 print(f"Alumno:           {alumno.get('nombre')}")
                 print(f"Matrícula:        {matricula}")
@@ -337,7 +356,7 @@ def lecturaArchivo():
             if not data:
                 print(f"El archivo '{nombre_archivo}' está vacío.")
                 break
-            
+            pantalla_carga("Obteniendo Datos")
             match nombre_archivo:
                 case "Usuarios.json":
                     print("\n=== LISTADO DE USUARIOS ===")
@@ -397,7 +416,7 @@ def lecturaArchivo():
         except PermissionError:
             print(f"Error: no tienes permisos para abrir '{nombre_archivo}'.")                       
 
-def escrituraArchivo():
+def menuEscrituraArchivo():
     while True:
             nombre_archivo = input("Ingresa el nombre del archivo para la nueva entrada: ")
             ruta_archivo = DIR_BASE / "data" / nombre_archivo
@@ -408,11 +427,11 @@ def escrituraArchivo():
             
                 match nombre_archivo:
                     case "Usuarios.json":
-                        crearCuenta(mat="")        
+                        crearCuenta(rolUsuario="Admin")        
                     case "Organizaciones.json":
                         crearOrganizacion()        
                     case "Bitacoras Usuarios.json":
-                        crearBitacoraUsuario(mat="")        
+                        crearBitacoraUsuario(rol = "Admin")        
                     case "Administradores.json":
                         crearAdministrador()        
                     case _:
@@ -441,6 +460,7 @@ def crearOrganizacion():
         correo = input("Correo de contacto: ")
         descp = input("Descripcion de la Organización: ")
         web = input("Pagina web de la Organización")
+        fechaTupla = estructuraFecha()
     
         if id_org in organizaciones:
             print("Esa organización ya está registrada en el sistema.")
@@ -455,11 +475,12 @@ def crearOrganizacion():
                 "sector": sector,
                 "correo": correo,
                 "descripcion": descp,
-                "pagina_web": web
+                "pagina_web": web,
+                "fecha creacion": fechaTupla
             }
             with open(RUTA_ARCHIVO_ORGS, mode="w") as archivo:
                 json.dump(organizaciones, archivo, indent=4, ensure_ascii=False)
-            
+            pantalla_carga("Escribiendo los datos")
             print("Organización registrada exitosamente.")
             break
 
@@ -474,11 +495,11 @@ def crearAdministrador():
     
     while True:
         print("\n--- Crear Nuevo Administrador ---")
-        id_admin = input("ID de Administrador (ej. número de nómina): ").strip()
-        nombre = input("Nombre completo: ").strip()
-        departamento = input("Departamento: ").strip()
-        correo = input("Correo Institucional: ").strip()
-    
+        id_admin = input("ID de Administrador (ej. número de nómina): ")
+        nombre = input("Nombre completo: ")
+        departamento = input("Departamento: ")
+        correo = input("Correo Institucional: ")
+        fechaTupla = estructuraFecha()
         if id_admin in administradores:
             print("Ese administrador ya está registrado en el sistema.")
             continue
@@ -491,16 +512,18 @@ def crearAdministrador():
                 "nombre": nombre,
                 "departamento": departamento,
                 "correo": correo,
-                "rol": "Administrador"
+                "rol": "Administrador",
+                "fecha creacion": fechaTupla
             }
             with open(RUTA_ARCHIVO_ADMINS, mode="w") as archivo:
                 json.dump(administradores, archivo, indent=4, ensure_ascii=False)
-            
+            pantalla_carga("Escribiendo los datos")
             print("Administrador creado exitosamente.")
             break
  
 ### Funcion reutilizable dentro de los do roles Alumno / Admin
-def crearBitacoraUsuario(mat):
+def crearBitacoraUsuario(rol):
+    
     bitacoras = []
         
     try:
@@ -512,10 +535,12 @@ def crearBitacoraUsuario(mat):
     
     while True:
         print("\n--- Registro de Bitácora ---")
-        if mat == "":
+        if rol == "Alumno":
+            global matricula
+        else:
             matricula = input("Ingresa la matrícula del usuario: ")
-        fecha = input("Ingresa la fecha (ej. DD/MM/AAAA): ")
-        
+            
+        fechaTupla = estructuraFecha() 
         # Validar entrada numérica para evitar que el programa truene
         try:
             horas = int(input("Ingresa las horas acumuladas (entero): "))
@@ -526,7 +551,7 @@ def crearBitacoraUsuario(mat):
         descripcion = input("Ingresa las actividades realizadas: ")
 
         # Validaciones de campos obligatorios
-        if matricula == "" or fecha == "" or descripcion == "":
+        if matricula == "" or descripcion == "":
             print("La matrícula, fecha y descripción no pueden estar vacías.")
             continue
             
@@ -537,7 +562,7 @@ def crearBitacoraUsuario(mat):
         # Crear estructura de registro
         bitacoras[f"{matricula} - {fecha}"] = {
             "matricula": matricula,
-            "fecha": fecha,
+            "fecha": fechaTupla,
             "horas": horas,
             "descripcion": descripcion
         }
@@ -558,8 +583,9 @@ def generarReporteAlumno():
         return
 
     print("\n--- Exportar Reporte de Alumno ---")
-    matricula = input("Ingresa la matrícula del alumno a consultar: ").strip()
-
+    matricula = input("Ingresa la matrícula del alumno a consultar: ")
+    fechaTupla = estructuraFecha()
+    
     if matricula not in usuarios:
         print(f"Error: La matrícula '{matricula}' no se encuentra registrada.")
         return
@@ -597,6 +623,7 @@ def generarReporteAlumno():
         "-" * 55,
         f"Total de entradas registradas: {total_registros}",
         f"Total de horas acumuladas:    {total_horas} hrs",
+        f"Fecha Creacion reporte:   {fechaTupla}"
         "-" * 55
     ]
 
@@ -610,7 +637,7 @@ def generarReporteAlumno():
             lineas.append("-" * 40)
 
     lineas.append("=" * 55)
-
+    pantalla_carga("Generando el Archivo (～￣▽￣)～")
     try:
         with open(ruta_txt, mode="w", encoding="utf-8") as archivo_txt:
             archivo_txt.write("\n".join(lineas))
@@ -640,7 +667,7 @@ def acciones_admin():
                 case 2:
                     # Escritura archivo
                     vistaArchivos()
-                    escrituraArchivo()          
+                    menuEscrituraArchivo()          
                 case 3:
                     # Crear archivo reporte alumno
                     generarReporteAlumno()
@@ -650,7 +677,18 @@ def acciones_admin():
                 case _:
                     print("Ingrese una opción valida")
                     continue
-# -------------------------------------     
+# -------------------------------------  
+
+## Funciones Rol Organizacion
+def menuOrganizacion():
+    print("\n___________________________________")
+    print("Por le momento, esta funcion no se encuetra disponible")
+    print("Agradecemos su atención")
+    print("ヾ(＠⌒ー⌒＠)ノ")
+    print("___________________________________\n")
+    return
+# -------------------------------------  
+  
 
 # Menú dentro de la app
 while True:
@@ -670,8 +708,7 @@ while True:
             # Menu con todas las acciones para ALUMNOS
             acciones_alumno()
         case"Organización":
-            # TODO: Menu de org
-            print()
+            menuOrganizacion()
         case "Admin":
             acciones_admin()
 
