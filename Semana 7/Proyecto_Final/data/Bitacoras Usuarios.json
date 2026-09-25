@@ -1,0 +1,26 @@
+{
+    "7534389045 - 02/09/2026": {
+        "matricula": "7534389045",
+        "fecha": "02/09/2026",
+        "horas": 4,
+        "descripcion": "Diseño de interfaz de usuario para el módulo de registro de donaciones."
+    },
+    "7534389045 - 05/09/2026": {
+        "matricula": "7534389045",
+        "fecha": "05/09/2026",
+        "horas": 5,
+        "descripcion": "Desarrollo de scripts de migración de base de datos en Python."
+    },
+    "0987654321 - 01/09/2026": {
+        "matricula": "0987654321",
+        "fecha": "01/09/2026",
+        "horas": 6,
+        "descripcion": "Capacitación a personal operativo en el uso de la plataforma web."
+    },
+    "1234567890 - 03/09/2026": {
+        "matricula": "1234567890",
+        "fecha": "03/09/2026",
+        "horas": 2,
+        "descripcion": "Revisión y clasificación de documentación legal para el área social."
+    }
+}
