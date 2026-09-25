@@ -1,92 +1,105 @@
 {
-  "ORG001": {
-    "id_org": "ORG001",
-    "nombre": "Fundación Desarrollo Comunitario",
-    "sector": "Social",
-    "correo": "contacto@fundaciondesarrollo.org",
-    "descripcion": "Implementación de infraestructura básica y talleres educativos en zonas rurales.",
-    "pagina_web": "https://www.fundaciondesarrollo.org",
-    "fecha_creacion": "2010-03-15"
-  },
-  "ORG004": {
-    "id_org": "ORG004",
-    "nombre": "Banco de Alimentos Local",
-    "sector": "Salud y Nutrición",
-    "correo": "operaciones@bancoalimentos.org",
-    "descripcion": "Recolección y distribución de excedentes alimentarios a comedores comunitarios.",
-    "pagina_web": "https://www.bancoalimentos.org",
-    "fecha_creacion": "2012-08-22"
-  },
-  "ORG007": {
-    "id_org": "ORG007",
-    "nombre": "Asociación Cultural Arte y Vida",
-    "sector": "Cultura",
-    "correo": "contacto@arteyvida.org",
-    "descripcion": "Gestión de talleres comunitarios de teatro, pintura y preservación cultural.",
-    "pagina_web": "https://www.arteyvida.org",
-    "fecha_creacion": "2014-11-05"
-  },
-  "ORG003": {
-    "id_org": "ORG003",
-    "nombre": "Tecnología e Innovación Educativa",
-    "sector": "Educación",
-    "correo": "info@tecinnovacion.edu.mx",
-    "descripcion": "Desarrollo de software educativo y alfabetización digital en escuelas públicas.",
-    "pagina_web": "https://www.tecinnovacion.edu.mx",
-    "fecha_creacion": "2015-02-10"
-  },
-  "ORG009": {
-    "id_org": "ORG009",
-    "nombre": "Fondo de Apoyo Adultos Mayores",
-    "sector": "Asistencia Social",
-    "correo": "ayuda@fondoam.org",
-    "descripcion": "Acompañamiento, entrega de despensas y actividades integrales para la tercera edad.",
-    "pagina_web": "https://www.fondoam.org",
-    "fecha_creacion": "2016-06-30"
-  },
-  "ORG002": {
-    "id_org": "ORG002",
-    "nombre": "EcoVerde México",
-    "sector": "Medio Ambiente",
-    "correo": "proyectos@ecoverde.org",
-    "descripcion": "Coordinación de jornadas de reforestación, reciclaje y gestión de residuos urbanos.",
-    "pagina_web": "https://www.ecoverde.org.mx",
-    "fecha_creacion": "2018-04-18"
-  },
-  "ORG006": {
-    "id_org": "ORG006",
-    "nombre": "Red de Bienestar Animal",
-    "sector": "Protección Animal",
-    "correo": "contacto@bienestaranimal.org",
-    "descripcion": "Rescate, esterilización y campañas de adopción responsable de fauna urbana.",
-    "pagina_web": "https://www.bienestaranimal.org",
-    "fecha_creacion": "2019-10-01"
-  },
-  "ORG005": {
-    "id_org": "ORG005",
-    "nombre": "Centro de Inclusión Juvenil",
-    "sector": "Derechos Humanos",
-    "correo": "atencion@inclusionjuvenil.org",
-    "descripcion": "Asesoría legal, apoyo psicológico y talleres de inserción laboral para jóvenes.",
-    "pagina_web": "https://www.inclusionjuvenil.org",
-    "fecha_creacion": "2021-01-25"
-  },
-  "ORG010": {
-    "id_org": "ORG010",
-    "nombre": "Iniciativa Código Abierto",
-    "sector": "Tecnología",
-    "correo": "admin@codigoabierto.org",
-    "descripcion": "Desarrollo y mantenimiento de herramientas de código libre para ONG y gobierno.",
-    "pagina_web": "https://www.codigoabierto.org",
-    "fecha_creacion": "2022-07-14"
-  },
-  "ORG008": {
-    "id_org": "ORG008",
-    "nombre": "Instituto de Energías Renovables",
-    "sector": "Investigación",
-    "correo": "contacto@renovablesinst.org",
-    "descripcion": "Investigación y montaje de sistemas fotovoltaicos en comunidades sin red eléctrica.",
-    "pagina_web": "https://www.renovablesinst.org",
-    "fecha_creacion": "2024-05-19"
-  }
+    "ORG001": {
+        "id_org": "ORG001",
+        "nombre": "Fundación Desarrollo Comunitario",
+        "sector": "Social",
+        "correo": "contacto@fundaciondesarrollo.org",
+        "descripcion": "Implementación de infraestructura básica y talleres educativos en zonas rurales.",
+        "pagina_web": "https://www.fundaciondesarrollo.org",
+        "fecha_creacion": "2010-03-15"
+    },
+    "ORG004": {
+        "id_org": "ORG004",
+        "nombre": "Banco de Alimentos Local",
+        "sector": "Salud y Nutrición",
+        "correo": "operaciones@bancoalimentos.org",
+        "descripcion": "Recolección y distribución de excedentes alimentarios a comedores comunitarios.",
+        "pagina_web": "https://www.bancoalimentos.org",
+        "fecha_creacion": "2012-08-22"
+    },
+    "ORG007": {
+        "id_org": "ORG007",
+        "nombre": "Asociación Cultural Arte y Vida",
+        "sector": "Cultura",
+        "correo": "contacto@arteyvida.org",
+        "descripcion": "Gestión de talleres comunitarios de teatro, pintura y preservación cultural.",
+        "pagina_web": "https://www.arteyvida.org",
+        "fecha_creacion": "2014-11-05"
+    },
+    "ORG003": {
+        "id_org": "ORG003",
+        "nombre": "Tecnología e Innovación Educativa",
+        "sector": "Educación",
+        "correo": "info@tecinnovacion.edu.mx",
+        "descripcion": "Desarrollo de software educativo y alfabetización digital en escuelas públicas.",
+        "pagina_web": "https://www.tecinnovacion.edu.mx",
+        "fecha_creacion": "2015-02-10"
+    },
+    "ORG009": {
+        "id_org": "ORG009",
+        "nombre": "Fondo de Apoyo Adultos Mayores",
+        "sector": "Asistencia Social",
+        "correo": "ayuda@fondoam.org",
+        "descripcion": "Acompañamiento, entrega de despensas y actividades integrales para la tercera edad.",
+        "pagina_web": "https://www.fondoam.org",
+        "fecha_creacion": "2016-06-30"
+    },
+    "ORG002": {
+        "id_org": "ORG002",
+        "nombre": "EcoVerde México",
+        "sector": "Medio Ambiente",
+        "correo": "proyectos@ecoverde.org",
+        "descripcion": "Coordinación de jornadas de reforestación, reciclaje y gestión de residuos urbanos.",
+        "pagina_web": "https://www.ecoverde.org.mx",
+        "fecha_creacion": "2018-04-18"
+    },
+    "ORG006": {
+        "id_org": "ORG006",
+        "nombre": "Red de Bienestar Animal",
+        "sector": "Protección Animal",
+        "correo": "contacto@bienestaranimal.org",
+        "descripcion": "Rescate, esterilización y campañas de adopción responsable de fauna urbana.",
+        "pagina_web": "https://www.bienestaranimal.org",
+        "fecha_creacion": "2019-10-01"
+    },
+    "ORG005": {
+        "id_org": "ORG005",
+        "nombre": "Centro de Inclusión Juvenil",
+        "sector": "Derechos Humanos",
+        "correo": "atencion@inclusionjuvenil.org",
+        "descripcion": "Asesoría legal, apoyo psicológico y talleres de inserción laboral para jóvenes.",
+        "pagina_web": "https://www.inclusionjuvenil.org",
+        "fecha_creacion": "2021-01-25"
+    },
+    "ORG010": {
+        "id_org": "ORG010",
+        "nombre": "Iniciativa Código Abierto",
+        "sector": "Tecnología",
+        "correo": "admin@codigoabierto.org",
+        "descripcion": "Desarrollo y mantenimiento de herramientas de código libre para ONG y gobierno.",
+        "pagina_web": "https://www.codigoabierto.org",
+        "fecha_creacion": "2022-07-14"
+    },
+    "ORG008": {
+        "id_org": "ORG008",
+        "nombre": "Instituto de Energías Renovables",
+        "sector": "Investigación",
+        "correo": "contacto@renovablesinst.org",
+        "descripcion": "Investigación y montaje de sistemas fotovoltaicos en comunidades sin red eléctrica.",
+        "pagina_web": "https://www.renovablesinst.org",
+        "fecha_creacion": "2024-05-19"
+    },
+    "ORG012": {
+        "id_org": "ORG012",
+        "nombre": "Perritos hola",
+        "sector": "mascotas",
+        "correo": "perritos@hola.com",
+        "descripcion": "salva perritos",
+        "pagina_web": "perritos.com",
+        "fecha creacion": [
+            "5",
+            9,
+            2026
+        ]
+    }
 }

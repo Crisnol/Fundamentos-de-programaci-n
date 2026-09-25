@@ -1,9 +1,13 @@
 #Cristian Alejandro Nolasco Vargas
-# TODO añadir comprobaciones de que se seleccione un rol especifico
 
+import threading
 import time
 import json
 from pathlib import Path
+from datetime import datetime
+
+RESET = "\033[0m"
+AZUL = "\033[34m"
 
 DIR_BASE = Path(__file__).resolve().parent
 RUTA_ARCHIVO_USERS = DIR_BASE / "data" / "Usuarios.json"
@@ -17,7 +21,7 @@ matricula = ""
 
 # Funciones Para acceder / Crear Cuenta
 def inicioMenu():
-    print("""
+    print(f"""{AZUL}
            ████  ████    ████  ████   ███   ███  ████  █████ █████ ███  ███  █   █   
           █ ░░░░█ ░░░░   █░░░█ █░░░█ █ ░░█ █ ░░░ █░░░█ █░░░░░ ░█░░░ █░░█ ░░█ ██  █░  
            ███░░░███░░░  ████░░████░░█░ ░█░█░ ██░████░░████░░░ █░░░░█░░█░ ░█░█░█ █░░ 
@@ -25,26 +29,39 @@ def inicioMenu():
           ████░░████░░   █░░░░░█░░░█░ ███ ░░███ ░█░░░█░█████░  █░░ ███░ ███ ░█░░ █░░ 
            ░░░░ ░░░░░ ░   ░░    ░░  ░  ░░░ ░ ░░░ ░░░  ░ ░░░░░   ░░  ░░░  ░░░ ░░░  ░░ 
             ░░░░  ░░░░     ░     ░   ░  ░░░   ░░░  ░   ░ ░░░░░   ░   ░░░  ░░░  ░   ░ 
-          """)
+          {RESET}""")
     
     
     
     print("1) Iniciar Sesión")
     print("2) Crear Cuenta")
     print("3) Salir del programa")
-    opcion = int(input("Opción: "))
-    return opcion
+    
+    try:
+        opcion = int(input("Opción: "))
+        return opcion
+    except ValueError:
+        print("Error: Debes ingresar una opcion valida.")   
 
-def iniciarSesion():
+def iniciarSesion():        
+
     with open(RUTA_ARCHIVO_USERS, mode="r") as archivo:
+        try:
             usuarios = json.load(archivo)
+        except (FileNotFoundError, json.JSONDecodeError):
+            print("\nNo es posible ejecutar el program")
+            print("Porfavor intentalo mas tarde")
             
     while True:
         global matricula
         
-        print("\nIniciar Sesion")
-
-        matricula = input("Ingresa tu matricula: ")
+        print("\nIniciar Sesión")
+    
+        matricula = input("Ingresa tu matricula (0 para cancelar): ")
+        
+        if matricula == "0":
+            return "cancelar"
+        
         pantalla_carga("Verificando datos")
         # Comprobación de la matricula
         if matricula == "":
@@ -71,14 +88,17 @@ def crearCuenta(rolUsuario = "Alumno"):
     print("------ Crear Cuenta ------")
     
     while True:
-        print("Para crear una nueva cuenta ingresa los siguientes datos.")
-        matricula = input("Matricula: ")
+        print("Para crear una nueva cuenta ingresa los siguientes datos. (0 para canelar)")
+        matricula = input("Matricula (10 caracteres): ")
         nombre = input("Nombre: ")
         carrera = input("Carrera: ")
         correo = input("Correo Institucional: ")
-        rol = input("Rol (Alumno / Organización):")
+        rol = input("Rol (Alumno / Organización):").capitalize()
         servicio = ""
-    
+
+        if "0" in (matricula, nombre, carrera, correo, rol):
+            return "cancelar"
+        
         # Validar si la matrícula ya existe
         if matricula in usuarios:
             print("Esa matrícula ya está registrada en el sistema.")
@@ -87,8 +107,18 @@ def crearCuenta(rolUsuario = "Alumno"):
         pantalla_carga("Revisando datos")
         
         # Comprobación de datos ingresado correctamente
-        if ((matricula == "" or  len(matricula) !=  10) or nombre == "" or carrera == ""):
-            print("Algun dato incorrecto, porfavor ingresa correctamente.")
+        if matricula == "":
+            print("Se necesita una matricula para continuar.")
+        elif len(matricula) != 10:
+            print("La matricula no cumple con los requrimentos")
+            print("Debe de ser de 10 caracteres")
+        elif nombre == "":
+            print("Se necesita un nombre para continuar")
+        elif carrera == "":
+            print("Se necesita un carre para continuar")
+        elif(rol != "Alumno" and rol != "Organización"):
+            print("No seleccionaste correctamente el rol")
+            print("Ingresa correctamente el rol")
         else: 
             usuarios[matricula] = {
                 "matricula": matricula,
@@ -98,11 +128,15 @@ def crearCuenta(rolUsuario = "Alumno"):
                 "rol": rol,
                 "Servicio Social": servicio
             }
-            with open(RUTA_ARCHIVO_USERS, mode="w") as archivo:
-                json.dump(usuarios, archivo, indent=4, ensure_ascii=False)
+            try:
+                with open(RUTA_ARCHIVO_USERS, mode="w") as archivo:
+                    json.dump(usuarios, archivo, indent=4, ensure_ascii=False)
 
-            print("Usuario Creado Correctamente")
-            break
+                print("Usuario Creado Correctamente")
+                break
+            except OSError as e:
+                print(f"Error al escribir el archivo de reporte: {e}")
+       
 
 def registro_acceso_cuenta():
     while True:
@@ -113,12 +147,12 @@ def registro_acceso_cuenta():
         match opcion:
             case 1:
                 # Inicio de sesión
-                iniciarSesion()
-                break
+                if iniciarSesion() != "cancelar":
+                    break
             case 2:
                 # Crear cuenta
-                crearCuenta(rolUsuario = "Alumno")
-                break
+                if crearCuenta(rolUsuario = "Alumno") != "cancelar":
+                    break
             case 3:
                 # Salir del programa
                 boolSalir = True
@@ -141,12 +175,41 @@ def pantalla_carga(mensaje="Cargando"):
 
 ## Funcion Inactividad
 def controlInactividad():
-    print()
-
+    
+    def tarea_principal(callback):
+        print("Se comenzo el timer")
+        callback()
+    def finalizacionTimer():
+        print("se acabao el timer")
+    # def finalizacionTimer():
+    #     print("Se noto incatividad en el usuario")
+        
+        
+    #     while True:
+    #         respuesta = input("Desea Continuar (si/no):")
+    #         match respuesta:
+    #             case "si":
+    #                 controlInactividad()
+    #                 break
+    #             case "no":
+    #                 boolSalir = True
+    #                 break
+    #             case _:
+    #                 print("Dato Ingresado incorrectamente")
+                
+        
+    contadorTiempo = 10.0
+    temporizador = threading.Timer(contadorTiempo,tarea_principal, args=(finalizacionTimer,))
+    temporizador.start()             
+    
 ## Funcion Obtener Datos del usuario
 def loadDataUser(matricula):
     with open(RUTA_ARCHIVO_USERS, mode="r") as archivo:
-        usuarios = json.load(archivo)
+        try:
+            usuarios = json.load(archivo)
+        except (FileNotFoundError, json.JSONDecodeError):
+            print("\nNo es posible ejecutar el program")
+            print("Porfavor intentalo mas tarde")
 
     userData = usuarios[matricula]
     return userData
@@ -165,14 +228,22 @@ def obtenerNombreOrganizacion(id_org):
 ## Funcion para crear la fecha estructura
 def estructuraFecha():
     
-    print("Ingresa la fecha (ej. DD/MM/AAAA): ")
-    dia = input("Ingresa el dia: ") 
-    mes = int(input("Ingresa el mes (numero)"))
-    año = int(input("Ingresa el año (AAAA)"))
+    while True:
+        try:
+            dia = int(input("Ingresa el dia: "))
+            mes = int(input("Ingresa el mes (numero): "))
+            año = int(input("Ingresa el año (AAAA): "))
 
-    fechaTupla = (dia,mes,año)
+            # Verifica que la fecha exista realmente en el calendario
+            datetime(año, mes, dia)
+            
+            fecha_tupla = (dia, mes, año)
+            return fecha_tupla
+            break
+        except ValueError:
+            print("Entrada invalida. Asegurate de ingresar numeros y una fecha real.\n")
     
-    return fechaTupla
+
     
 # Funciones Acciones Programa
 ## Funciones Rol Alumno ----------------
@@ -192,47 +263,47 @@ def calcularHorasAcumuladas(matricula):
     return 0
 
 def impresionOrganizaciones():
-    while True:
-        ruta_archivo = DIR_BASE / "data" / "Organizaciones.json"
-        
-        pantalla_carga("Obteniendo Datos")
+    ruta_archivo = DIR_BASE / "data" / "Organizaciones.json"
+    
+    pantalla_carga("Obteniendo Datos")
 
-        try:
-            with open(ruta_archivo, "r", encoding="utf-8") as archivo:
-                data = json.load(archivo)
-                
-            if not data:
-                print("No hay organizaciones registradas actualmente.")
-                
-            print("\n=== LISTADO DE ORGANIZACIONES ===")
-            for key, content in data.items():
-                print("\n_________________________________________")
-                print(f"ID Org:      {key}")
-                print(f"Nombre:      {content.get('nombre', 'N/A')}")
-                print(f"Sector:      {content.get('sector', 'N/A')}")
-                print(f"Correo:      {content.get('correo', 'N/A')}")
-                print(f"Descripción: {content.get('descripcion', 'N/A')}")
-                print(f"Página Web:  {content.get('pagina_web', 'N/A')}")
-                print("_________________________________________")
-            break
-        except FileNotFoundError:
-            print(f"Error: no se encontro el archivo 'Organizaciones.json'.")
-        except json.JSONDecodeError:
-            print(f"Error: El archivo 'Organizaciones.json' está corrupto o no tiene un formato JSON válido.")
-        except PermissionError:
-            print(f"Error: no tienes permisos para abrir 'Organizaciones.json'.")                       
+    try:
+        with open(ruta_archivo, "r", encoding="utf-8") as archivo:
+            data = json.load(archivo)
+            
+        if not data:
+            print("No hay organizaciones registradas actualmente.")
+            
+        print("\n=== LISTADO DE ORGANIZACIONES ===")
+        for key, content in data.items():
+            print("\n_________________________________________")
+            print(f"ID Org:      {key}")
+            print(f"Nombre:      {content.get('nombre', 'N/A')}")
+            print(f"Sector:      {content.get('sector', 'N/A')}")
+            print(f"Correo:      {content.get('correo', 'N/A')}")
+            print(f"Descripción: {content.get('descripcion', 'N/A')}")
+            print(f"Página Web:  {content.get('pagina_web', 'N/A')}")
+            print("_________________________________________")
+        
+    except FileNotFoundError:
+        print(f"Error: no se encontro el archivo 'Organizaciones.json'.")
+    except json.JSONDecodeError:
+        print(f"Error: El archivo 'Organizaciones.json' está corrupto o no tiene un formato JSON válido.")
+    except PermissionError:
+        print(f"Error: no tienes permisos para abrir 'Organizaciones.json'.")                       
         
 def servicioSocial():
+    global matricula
     
     try:
-        with open(RUTA_ARCHIVO_USERS, "r", encoding="utf-8") as archivo:
+        with open(RUTA_ARCHIVO_USERS, "r") as archivo:
             usuarios = json.load(archivo)
     except (FileNotFoundError, json.JSONDecodeError):
         print("Error: No se pudo cargar 'Usuarios.json'.")
         return
 
 
-    alumno = usuarios[matricula]
+    alumno = usuarios.get(matricula)
 
     # 2. Si NO tiene servicio social asignado, mostrar formulario de inscripción
     if not alumno.get("Servicio Social"):
@@ -243,7 +314,7 @@ def servicioSocial():
         impresionOrganizaciones()
 
         print("\n--- Registro a Servicio Social ---")
-        id_org = input("Ingresa el ID de la organización a la que te deseas unir (o '0' para cancelar): ").strip()
+        id_org = input("Ingresa el ID de la organización a la que te deseas unir (o '0' para cancelar): ")
 
         if id_org == "0" or id_org == "":
             print("Operación cancelada.")
@@ -296,7 +367,7 @@ def servicioSocial():
 
         match opcionServicio:
             case 1:
-                # Llama a tu función existente adaptada
+                # Llamada funcion crear bitacora con arg rol alumno
                 crearBitacoraUsuario(rol="Alumno")
             case 2:
                 pantalla_carga("Obteniendo Datos")
@@ -319,7 +390,11 @@ def acciones_alumno():
         print("1) Organizaciones")
         print("2) Mi servicio")
         print("3) Salir de la cuenta")
-        opcion = int(input("Opción: "))
+        
+        try:
+            opcion = int(input("Opción: "))
+        except ValueError:
+            print("Error: Debes ingresar una opcion valida.")
         
         match opcion:
             case 1:
@@ -346,7 +421,11 @@ def vistaArchivos():
 
 def lecturaArchivo():
       while True:
-        nombre_archivo = input("Ingresa el nombre del archivo para leer: ")
+        nombre_archivo = input("Ingresa el nombre del archivo para leer (0 para cancelar): ")
+        
+        if nombre_archivo == 0:
+            break
+        
         ruta_archivo = DIR_BASE / "data" / nombre_archivo
 
         try:
@@ -418,30 +497,34 @@ def lecturaArchivo():
 
 def menuEscrituraArchivo():
     while True:
-            nombre_archivo = input("Ingresa el nombre del archivo para la nueva entrada: ")
-            ruta_archivo = DIR_BASE / "data" / nombre_archivo
-    
-            try:
-                with open(ruta_archivo, "r") as archivo:
-                    data = json.load(archivo)
-            
-                match nombre_archivo:
-                    case "Usuarios.json":
-                        crearCuenta(rolUsuario="Admin")        
-                    case "Organizaciones.json":
-                        crearOrganizacion()        
-                    case "Bitacoras Usuarios.json":
-                        crearBitacoraUsuario(rol = "Admin")        
-                    case "Administradores.json":
-                        crearAdministrador()        
-                    case _:
-                        print("Error inesperado")
-                   
-                break
-            except FileNotFoundError:
-                print(f"Error: no se encontro el archivo '{nombre_archivo}'.")
-            except PermissionError:
-                print(f"Error: no tienes permisos para abrir '{nombre_archivo}'.") 
+        nombre_archivo = input("Ingresa el nombre del archivo para la nueva entrada (0 para cancelar): ")
+        
+        if nombre_archivo == 0:
+            break
+        
+        ruta_archivo = DIR_BASE / "data" / nombre_archivo
+
+        try:
+            with open(ruta_archivo, "r") as archivo:
+                data = json.load(archivo)
+        
+            match nombre_archivo:
+                case "Usuarios.json":
+                    crearCuenta(rolUsuario="Admin")        
+                case "Organizaciones.json":
+                    crearOrganizacion()        
+                case "Bitacoras Usuarios.json":
+                    crearBitacoraUsuario(rol = "Admin")        
+                case "Administradores.json":
+                    crearAdministrador()        
+                case _:
+                    print("Error inesperado")
+                
+            break
+        except FileNotFoundError:
+            print(f"Error: no se encontro el archivo '{nombre_archivo}'.")
+        except PermissionError:
+            print(f"Error: no tienes permisos para abrir '{nombre_archivo}'.") 
 
 def crearOrganizacion():
     organizaciones = {}
@@ -459,7 +542,7 @@ def crearOrganizacion():
         sector = input("Sector: ")
         correo = input("Correo de contacto: ")
         descp = input("Descripcion de la Organización: ")
-        web = input("Pagina web de la Organización")
+        web = input("Pagina web de la Organización: ")
         fechaTupla = estructuraFecha()
     
         if id_org in organizaciones:
@@ -478,11 +561,14 @@ def crearOrganizacion():
                 "pagina_web": web,
                 "fecha creacion": fechaTupla
             }
-            with open(RUTA_ARCHIVO_ORGS, mode="w") as archivo:
-                json.dump(organizaciones, archivo, indent=4, ensure_ascii=False)
-            pantalla_carga("Escribiendo los datos")
-            print("Organización registrada exitosamente.")
-            break
+            try:
+                with open(RUTA_ARCHIVO_ORGS, mode="w") as archivo:
+                    json.dump(organizaciones, archivo, indent=4, ensure_ascii=False)
+                pantalla_carga("Escribiendo los datos")
+                print("Organización registrada exitosamente.")
+                break
+            except OSError as e:
+                print(f"Error al escribir el archivo de reporte: {e}")
 
 def crearAdministrador():
     administradores = {}
@@ -515,11 +601,14 @@ def crearAdministrador():
                 "rol": "Administrador",
                 "fecha creacion": fechaTupla
             }
-            with open(RUTA_ARCHIVO_ADMINS, mode="w") as archivo:
-                json.dump(administradores, archivo, indent=4, ensure_ascii=False)
-            pantalla_carga("Escribiendo los datos")
-            print("Administrador creado exitosamente.")
-            break
+            try:
+                with open(RUTA_ARCHIVO_ADMINS, mode="w") as archivo:
+                    json.dump(administradores, archivo, indent=4, ensure_ascii=False)
+                pantalla_carga("Escribiendo los datos")
+                print("Administrador creado exitosamente.")
+                break
+            except OSError as e:
+                print(f"Error al escribir el archivo de reporte: {e}")
  
 ### Funcion reutilizable dentro de los do roles Alumno / Admin
 def crearBitacoraUsuario(rol):
@@ -560,7 +649,7 @@ def crearBitacoraUsuario(rol):
             continue
 
         # Crear estructura de registro
-        bitacoras[f"{matricula} - {fecha}"] = {
+        bitacoras[f"{matricula} - {fechaTupla}"] = {
             "matricula": matricula,
             "fecha": fechaTupla,
             "horas": horas,
@@ -576,7 +665,7 @@ def crearBitacoraUsuario(rol):
 
 def generarReporteAlumno():
     try:
-        with open(RUTA_ARCHIVO_USERS, mode="r", encoding="utf-8") as archivo:
+        with open(RUTA_ARCHIVO_USERS, mode="r") as archivo:
             usuarios = json.load(archivo)
     except (FileNotFoundError, json.JSONDecodeError):
         print("Error: No se pudo abrir o leer 'Usuarios.json'.")
@@ -612,18 +701,18 @@ def generarReporteAlumno():
     ruta_txt = CARPETA_REPORTES / f"Reporte_{matricula}.txt"
 
     lineas = [
-        "=" * 55,
+        "_" * 55,
         "               REPORTE DETALLADO DE ALUMNO               ",
-        "=" * 55,
+        "_" * 55,
         f"Matrícula: {alumno.get('matricula', 'N/A')}",
         f"Nombre:    {alumno.get('nombre', 'N/A')}",
         f"Carrera:   {alumno.get('carrera', 'N/A')}",
         f"Correo:    {alumno.get('correo', 'N/A')}",
         f"Rol:       {alumno.get('rol', 'N/A')}",
+        f"Fecha Creacion reporte:   {fechaTupla}",
         "-" * 55,
         f"Total de entradas registradas: {total_registros}",
         f"Total de horas acumuladas:    {total_horas} hrs",
-        f"Fecha Creacion reporte:   {fechaTupla}"
         "-" * 55
     ]
 
@@ -639,13 +728,15 @@ def generarReporteAlumno():
     lineas.append("=" * 55)
     pantalla_carga("Generando el Archivo (～￣▽￣)～")
     try:
-        with open(ruta_txt, mode="w", encoding="utf-8") as archivo_txt:
+        with open(ruta_txt, mode="w",) as archivo_txt:
             archivo_txt.write("\n".join(lineas))
         print(f"\nReporte generado con éxito en: {ruta_txt}")
     except OSError as e:
         print(f"Error al escribir el archivo de reporte: {e}")
 
 def acciones_admin():
+    
+    #controlInactividad()
     matriz_menu = [
     ["1) Vista y lectura Archivos", "2) Escritura Archivo"],
     ["3) Crear Reporte Alumno",     "4) Salir Cuenta"]
@@ -657,8 +748,12 @@ def acciones_admin():
                 for j in range(len(matriz_menu[i])):
                     print(f"{matriz_menu[i][j]}") 
             
-            opcion = int(input("\nOpción: "))
-            
+            try:
+                opcion = int(input("\nOpción: "))
+            except ValueError:
+                print("Error: Debes ingresar una opcion valida.")
+                
+            # controlInactividad()
             match opcion:
                 case 1:
                     # Lectura archivo
@@ -712,9 +807,4 @@ while True:
         case "Admin":
             acciones_admin()
 
-print("Agradesemos su Preferencia")
-
-
-
-
-
+print("Agradecemos Su Preferencia")
