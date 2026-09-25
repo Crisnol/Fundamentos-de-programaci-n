@@ -3,24 +3,42 @@
         "matricula": "7534389045",
         "fecha": "02/09/2026",
         "horas": 4,
-        "descripcion": "Diseño de interfaz de usuario para el módulo de registro de donaciones."
+        "descripcion": "DiseÃƒÆ’Ã‚Â±o de interfaz de usuario para el mÃƒÆ’Ã‚Â³dulo de registro de donaciones."
     },
     "7534389045 - 05/09/2026": {
         "matricula": "7534389045",
         "fecha": "05/09/2026",
         "horas": 5,
-        "descripcion": "Desarrollo de scripts de migración de base de datos en Python."
+        "descripcion": "Desarrollo de scripts de migraciÃƒÆ’Ã‚Â³n de base de datos en Python."
     },
     "0987654321 - 01/09/2026": {
         "matricula": "0987654321",
         "fecha": "01/09/2026",
         "horas": 6,
-        "descripcion": "Capacitación a personal operativo en el uso de la plataforma web."
+        "descripcion": "CapacitaciÃƒÆ’Ã‚Â³n a personal operativo en el uso de la plataforma web."
     },
     "1234567890 - 03/09/2026": {
         "matricula": "1234567890",
         "fecha": "03/09/2026",
         "horas": 2,
-        "descripcion": "Revisión y clasificación de documentación legal para el área social."
+        "descripcion": "RevisiÃƒÆ’Ã‚Â³n y clasificaciÃƒÆ’Ã‚Â³n de documentaciÃƒÆ’Ã‚Â³n legal para el ÃƒÆ’Ã‚Â¡rea social."
+    },
+    "1234567890 - 23/09/2026": {
+        "matricula": "1234567890",
+        "fecha": "23/09/2026",
+        "horas": 4,
+        "descripcion": "nose"
+    },
+    "1234567890 - 12/09/2025": {
+        "matricula": "1234567890",
+        "fecha": "12/09/2025",
+        "horas": 7,
+        "descripcion": "nose"
+    },
+    "1234567890 - 23/23/09": {
+        "matricula": "1234567890",
+        "fecha": "23/23/09",
+        "horas": 3,
+        "descripcion": "fdsaf"
     }
 }

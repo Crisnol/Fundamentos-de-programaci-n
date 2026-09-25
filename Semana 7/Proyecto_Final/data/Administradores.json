@@ -1,37 +1,42 @@
 {
-    "ADM001": {
-        "id_admin": "ADM001",
-        "nombre": "Carlos Mendoza Ruiz",
-        "departamento": "Servicio Social",
-        "correo": "carlos.mendoza@tecmilenio.mx",
-        "rol": "Administrador"
-    },
-    "ADM002": {
-        "id_admin": "ADM002",
-        "nombre": "Mariana Gómez Torres",
-        "departamento": "Coordinación Académica",
-        "correo": "mariana.gomez@tecmilenio.mx",
-        "rol": "Administrador"
-    },
-    "ADM003": {
-        "id_admin": "ADM003",
-        "nombre": "Roberto Hernández",
-        "departamento": "Vinculación Empresarial",
-        "correo": "r.hernandez@tecmilenio.mx",
-        "rol": "Administrador"
-    },
-    "ADM004": {
-        "id_admin": "ADM004",
-        "nombre": "Laura Patricia Castillo",
-        "departamento": "Asuntos Estudiantiles",
-        "correo": "laura.castillo@tecmilenio.mx",
-        "rol": "Administrador"
-    },
-    "ADM005": {
-        "id_admin": "ADM005",
-        "nombre": "Fernando Morales",
-        "departamento": "Sistemas de Información",
-        "correo": "f.morales@tecmilenio.mx",
-        "rol": "Administrador"
-    }
+  "ADM003": {
+    "id_admin": "ADM003",
+    "nombre": "Roberto Hernández",
+    "departamento": "Vinculación Empresarial",
+    "correo": "r.hernandez@tecmilenio.mx",
+    "rol": "Administrador",
+    "fecha_creacion": "2015-04-12"
+  },
+  "ADM001": {
+    "id_admin": "ADM001",
+    "nombre": "Carlos Mendoza Ruiz",
+    "departamento": "Servicio Social",
+    "correo": "carlos.mendoza@tecmilenio.mx",
+    "rol": "Administrador",
+    "fecha_creacion": "2018-09-01"
+  },
+  "ADM004": {
+    "id_admin": "ADM004",
+    "nombre": "Laura Patricia Castillo",
+    "departamento": "Asuntos Estudiantiles",
+    "correo": "laura.castillo@tecmilenio.mx",
+    "rol": "Administrador",
+    "fecha_creacion": "2020-02-15"
+  },
+  "ADM002": {
+    "id_admin": "ADM002",
+    "nombre": "Mariana Gómez Torres",
+    "departamento": "Coordinación Académica",
+    "correo": "mariana.gomez@tecmilenio.mx",
+    "rol": "Administrador",
+    "fecha_creacion": "2022-11-20"
+  },
+  "ADM005": {
+    "id_admin": "ADM005",
+    "nombre": "Fernando Morales",
+    "departamento": "Sistemas de Información",
+    "correo": "f.morales@tecmilenio.mx",
+    "rol": "Administrador",
+    "fecha_creacion": "2024-06-08"
+  }
 }
