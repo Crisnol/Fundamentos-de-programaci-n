@@ -1,0 +1,17 @@
+=======================================================
+               REPORTE DETALLADO DE ALUMNO               
+=======================================================
+Matrícula: 1234567890
+Nombre:    afalsdf
+Carrera:   asf
+Correo:    asldkf
+Rol:       Alumno
+-------------------------------------------------------
+Total de entradas registradas: 1
+Total de horas acumuladas:    2 hrs
+-------------------------------------------------------
+HISTORIAL DE ACTIVIDADES:
+  [1] Fecha: 03/09/2026 | Horas: 2
+      Descripción: Revisión y clasificación de documentación legal para el área social.
+----------------------------------------
+=======================================================

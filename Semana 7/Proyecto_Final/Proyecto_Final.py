@@ -1,4 +1,6 @@
 #Cristian Alejandro Nolasco Vargas
+# TODO revisar mi servicio social/ al añadir bitacora
+# TODO añadir comprobaciones de que se seleccione un rol especifico
 
 import time
 import json
@@ -54,9 +56,11 @@ def iniciarSesion():
             print("El usuario no existe, crea una cuenta")
         else:
             break
-        
-def crearCuenta():
-    global matricula
+
+## Funcion ocupada en Rol Alumno / Admin        
+def crearCuenta(mat = " "):
+    if mat == "":
+        global matricula
     usuarios = {}
     
     with open(RUTA_ARCHIVO_USERS, mode="r") as archivo:
@@ -72,6 +76,7 @@ def crearCuenta():
         carrera = input("Carrera: ")
         correo = input("Correo Institucional: ")
         rol = input("Rol (Alumno / Organización):")
+        servicio = ""
     
         # Validar si la matrícula ya existe
         if matricula in usuarios:
@@ -87,11 +92,13 @@ def crearCuenta():
                 "nombre": nombre,
                 "carrera": carrera,
                 "correo": correo,
-                "rol": rol
+                "rol": rol,
+                "Servicio Social": servicio
             }
             with open(RUTA_ARCHIVO_USERS, mode="w") as archivo:
                 json.dump(usuarios, archivo, indent=4, ensure_ascii=False)
 
+            print("Usuario Creado Correctamente")
             break
 
 def registro_acceso_cuenta():
@@ -141,76 +148,152 @@ def loadDataUser(matricula):
     userData = usuarios[matricula]
     return userData
 
+## Funcion obtener nombre org atra vez id
+def obtenerNombreOrganizacion(id_org):
+    try:
+        with open(RUTA_ARCHIVO_ORGS, "r", encoding="utf-8") as archivo:
+            orgs = json.load(archivo)
+            if id_org in orgs:
+                return orgs[id_org].get("nombre", id_org)
+    except (FileNotFoundError, json.JSONDecodeError):
+        pass
+    return id_org
+
 # Funciones Acciones Programa
 ## Funciones Rol Alumno ----------------
+def calcularHorasAcumuladas(matricula):
+    """Suma dinámicamente las horas del alumno desde Bitacoras Usuarios.json."""
+    try:
+        with open(RUTA_ARCHIVO_BITACORAS, "r", encoding="utf-8") as archivo:
+            bitacoras = json.load(archivo)
+            if isinstance(bitacoras, dict):
+                return sum(
+                    reg.get("horas", 0) 
+                    for reg in bitacoras.values() 
+                    if isinstance(reg, dict) and reg.get("matricula") == matricula
+                )
+    except (FileNotFoundError, json.JSONDecodeError):
+        pass
+    return 0
+
 def impresionOrganizaciones():
     while True:
-        print("Organización Socias")
-        
-        cantOrganizaciones = 5
-        
-        # for para recorrer la lista de las organizaciones
-        for i in range(1, cantOrganizaciones + 1):
-            cupos = 5
-            print(f"{i}) #Nombre de la organización (Cupos: {cupos})")
-        
-        print(f"{cantOrganizaciones + 1}) Salir")
-        opcionOrg = int(input("Elije una organización para ver su información: "))
-
-        # Seleccion de opciones para ver las organizaciones o salir
-        if opcionOrg == cantOrganizaciones + 1:
+        ruta_archivo = DIR_BASE / "data" / "Organizaciones.json"
+        try:
+            with open(ruta_archivo, "r", encoding="utf-8") as archivo:
+                data = json.load(archivo)
+                
+            if not data:
+                print("No hay organizaciones registradas actualmente.")
+                
+            print("\n=== LISTADO DE ORGANIZACIONES ===")
+            for key, content in data.items():
+                print("\n_________________________________________")
+                print(f"ID Org:      {key}")
+                print(f"Nombre:      {content.get('nombre', 'N/A')}")
+                print(f"Sector:      {content.get('sector', 'N/A')}")
+                print(f"Correo:      {content.get('correo', 'N/A')}")
+                print(f"Descripción: {content.get('descripcion', 'N/A')}")
+                print(f"Página Web:  {content.get('pagina_web', 'N/A')}")
+                print("_________________________________________")
             break
-        elif 1 <= opcionOrg <= cantOrganizaciones:
-            print(f"Mostrando información de la organización {opcionOrg}...")
-        else:
-            print("Ingrese una opción válida.")
-
+        except FileNotFoundError:
+            print(f"Error: no se encontro el archivo 'Organizaciones.json'.")
+        except json.JSONDecodeError:
+            print(f"Error: El archivo 'Organizaciones.json' está corrupto o no tiene un formato JSON válido.")
+        except PermissionError:
+            print(f"Error: no tienes permisos para abrir 'Organizaciones.json'.")                       
+        
 def servicioSocial():
     
-    orgAlumno = "Perritos A Salvo"
-    horasAcumuladas = 140
-    
-    while True:
-        print("\nMi servicio")
-        print(f"Organización actual: {orgAlumno}")
-        print(f"Horas acumuladas: {horasAcumuladas} hrs")
+    try:
+        with open(RUTA_ARCHIVO_USERS, "r", encoding="utf-8") as archivo:
+            usuarios = json.load(archivo)
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("Error: No se pudo cargar 'Usuarios.json'.")
+        return
 
-        print("1) Registrar un nuevo dia")
+
+    alumno = usuarios[matricula]
+
+    # 2. Si NO tiene servicio social asignado, mostrar formulario de inscripción
+    if not alumno.get("Servicio Social"):
+        print("\n--------------------------------------------------")
+        print("Aún no tienes asignada una organización de Servicio Social.")
+        print("--------------------------------------------------")
+        
+        impresionOrganizaciones()
+
+        print("\n--- Registro a Servicio Social ---")
+        id_org = input("Ingresa el ID de la organización a la que te deseas unir (o '0' para cancelar): ").strip()
+
+        if id_org == "0" or id_org == "":
+            print("Operación cancelada.")
+            return
+
+        # Validar que el ID exista en Organizaciones.json
+        try:
+            with open(RUTA_ARCHIVO_ORGS, "r", encoding="utf-8") as archivo:
+                orgs = json.load(archivo)
+        except (FileNotFoundError, json.JSONDecodeError):
+            orgs = {}
+
+        if id_org not in orgs:
+            print(f"Error: El ID '{id_org}' no coincide con ninguna organización válida.")
+            return
+
+        # Guardar la asignación en Usuarios.json
+        alumno["Servicio Social"] = id_org
+        try:
+            with open(RUTA_ARCHIVO_USERS, "w", encoding="utf-8") as archivo:
+                json.dump(usuarios, archivo, indent=4, ensure_ascii=False)
+            print(f"\n¡Te has inscrito con éxito a '{orgs[id_org].get('nombre')}'!")
+        except OSError as e:
+            print(f"Error al guardar los cambios: {e}")
+            return
+
+    # 3. Menú principal del Servicio Social (cuando ya cuenta con organización)
+    id_org = alumno["Servicio Social"]
+
+    while True:
+        nombre_org = obtenerNombreOrganizacion(id_org)
+        horas_acumuladas = calcularHorasAcumuladas(matricula)
+        meta_horas = 480  # Horas requeridas estándar para servicio social
+
+        print("\n==========================================")
+        print("             MI SERVICIO SOCIAL           ")
+        print("==========================================")
+        print(f"Organización:   {nombre_org} (ID: {id_org})")
+        print(f"Horas acumuladas: {horas_acumuladas} / {meta_horas} hrs")
+        print("------------------------------------------")
+        print("1) Registrar un nuevo día en la bitácora")
         print("2) Ver detalles de mi servicio")
         print("3) Regresar")
 
-        opcionServicio = int(input("Opción: "))
+        try:
+            opcionServicio = int(input("Opción: "))
+        except ValueError:
+            print("Error: Debes ingresar un número entero.")
+            continue
 
         match opcionServicio:
-        # 1 Ingresa un nuevo registro en la bitacora
             case 1:
-                registro_bitacora()
-        
-        # 2 Ver detalles del servicio
+                # Llama a tu función existente adaptada
+                crearBitacoraUsuario(mat=matricula)
             case 2:
-                print("Detalles de mi servicio")
-                print(f"Organización: {orgAlumno}")
-                print(f"Horas acumuladas: {horasAcumuladas} hrs")
-
+                print("\n--- DETALLES DE MI SERVICIO SOCIAL ---")
+                print(f"Alumno:           {alumno.get('nombre')}")
+                print(f"Matrícula:        {matricula}")
+                print(f"Carrera:          {alumno.get('carrera')}")
+                print(f"Organización:     {nombre_org} ({id_org})")
+                print(f"Horas acumuladas: {horas_acumuladas} hrs")
+                print(f"Horas pendientes: {max(0, meta_horas - horas_acumuladas)} hrs")
+                print(f"Estatus:          {'Completado' if horas_acumuladas >= meta_horas else 'En progreso'}")
             case 3:
                 break
             case _:
-                print("Ingrese una opción valida")
+                print("Opción no válida. Intenta de nuevo.")
 
-def registro_bitacora():
-    print("Bitacora")
-    fecha = input("Ingresa la fecha: ")
-    horas = int(input("Ingresa las horas acumuladas (entero): "))
-    descripcion = input("Ingresa las actividades realizadas: ")
-
-    if fecha == "" or descripcion == "":
-        print("La fecha y la descripción no pueden estar vacías.")
-    else:
-        print("Registro guardado exitosamente.")
-        print(f"Fecha: {fecha}")
-        print(f"Horas: {horas}")
-        print(f"Descripción: {descripcion}")
-    
 def acciones_alumno():
     while True:
         print("\nBienvenido " + nombre)
@@ -237,10 +320,10 @@ def acciones_alumno():
 ## Funciones Rol Admin ----------------
 def vistaArchivos():
     print("\nLista de los Archivos Existentes")
-    print("1. Organizaciones.txt")
+    print("1. Organizaciones.json")
     print("2. Usuarios.json")
-    print("3. Bitacoras Usuarios.txt")
-    print("4. Administradores.txt\n")
+    print("3. Bitacoras Usuarios.json")
+    print("4. Administradores.json\n")
 
 def lecturaArchivo():
       while True:
@@ -250,24 +333,73 @@ def lecturaArchivo():
         try:
             with open(ruta_archivo, "r") as archivo:
                 data = json.load(archivo)
-                
-            for key, content in data.items():
-                print("\n_________________________________________")
-                print(f"Matricula: {key}")
-                print(f"Nombre: {content["nombre"]}")
-                print(f"Carrera: {content["carrera"]}")
-                print(f"Correo: {content["correo"]}")
-                print(f"Rol: {content["rol"]}")
-                print("_________________________________________")    
+            
+            if not data:
+                print(f"El archivo '{nombre_archivo}' está vacío.")
+                break
+            
+            match nombre_archivo:
+                case "Usuarios.json":
+                    print("\n=== LISTADO DE USUARIOS ===")
+                    for key, content in data.items():
+                        print("\n_________________________________________")
+                        print(f"Matrícula: {key}")
+                        print(f"Nombre:    {content.get('nombre', 'N/A')}")
+                        print(f"Carrera:   {content.get('carrera', 'N/A')}")
+                        print(f"Correo:    {content.get('correo', 'N/A')}")
+                        print(f"Rol:       {content.get('rol', 'N/A')}")
+                        print(f"Servicio Social:    {content.get('Servicio Social', 'N/A')}")
+                        print("_________________________________________")
+
+                case "Organizaciones.json":
+                    print("\n=== LISTADO DE ORGANIZACIONES ===")
+                    for key, content in data.items():
+                        print("\n_________________________________________")
+                        print(f"ID Org:      {key}")
+                        print(f"Nombre:      {content.get('nombre', 'N/A')}")
+                        print(f"Sector:      {content.get('sector', 'N/A')}")
+                        print(f"Correo:      {content.get('correo', 'N/A')}")
+                        print(f"Descripción: {content.get('descripcion', 'N/A')}")
+                        print(f"Página Web:  {content.get('pagina_web', 'N/A')}")
+                        print("_________________________________________")
+
+                case "Administradores.json":
+                    print("\n=== LISTADO DE ADMINISTRADORES ===")
+                    for key, content in data.items():
+                        print("\n_________________________________________")
+                        print(f"ID Admin:     {key}")
+                        print(f"Nombre:       {content.get('nombre', 'N/A')}")
+                        print(f"Departamento: {content.get('departamento', 'N/A')}")
+                        print(f"Correo:       {content.get('correo', 'N/A')}")
+                        print(f"Rol:          {content.get('rol', 'N/A')}")
+                        print("_________________________________________")
+
+                case "Bitacoras Usuarios.json":
+                    print("\n=== LISTADO DE BITÁCORAS ===")
+                    for key, content in data.items():
+                        print("\n_________________________________________")
+                        print(f"Registro:    {key}")
+                        print(f"Matrícula:   {content.get('matricula', 'N/A')}")
+                        print(f"Fecha:       {content.get('fecha', 'N/A')}")
+                        print(f"Horas:       {content.get('horas', 'N/A')} hrs")
+                        print(f"Descripción: {content.get('descripcion', 'N/A')}")
+                        print("_________________________________________")
+
+                case _:
+                    print(f"Error: No existe un formato de lectura definido para '{nombre_archivo}'.")
+
             break
+        
         except FileNotFoundError:
             print(f"Error: no se encontro el archivo '{nombre_archivo}'.")
+        except json.JSONDecodeError:
+            print(f"Error: El archivo '{nombre_archivo}' está corrupto o no tiene un formato JSON válido.")
         except PermissionError:
             print(f"Error: no tienes permisos para abrir '{nombre_archivo}'.")                       
 
 def escrituraArchivo():
     while True:
-            nombre_archivo = input("Ingresa el nombre del archivo para leer: ")
+            nombre_archivo = input("Ingresa el nombre del archivo para la nueva entrada: ")
             ruta_archivo = DIR_BASE / "data" / nombre_archivo
     
             try:
@@ -276,11 +408,11 @@ def escrituraArchivo():
             
                 match nombre_archivo:
                     case "Usuarios.json":
-                         creaCuentaUsuario()        
+                        crearCuenta(mat="")        
                     case "Organizaciones.json":
                         crearOrganizacion()        
                     case "Bitacoras Usuarios.json":
-                        crearBitacoraUsuario()        
+                        crearBitacoraUsuario(mat="")        
                     case "Administradores.json":
                         crearAdministrador()        
                     case _:
@@ -307,6 +439,8 @@ def crearOrganizacion():
         nombre = input("Nombre de la Organización: ")
         sector = input("Sector: ")
         correo = input("Correo de contacto: ")
+        descp = input("Descripcion de la Organización: ")
+        web = input("Pagina web de la Organización")
     
         if id_org in organizaciones:
             print("Esa organización ya está registrada en el sistema.")
@@ -319,7 +453,9 @@ def crearOrganizacion():
                 "id_org": id_org,
                 "nombre": nombre,
                 "sector": sector,
-                "correo": correo
+                "correo": correo,
+                "descripcion": descp,
+                "pagina_web": web
             }
             with open(RUTA_ARCHIVO_ORGS, mode="w") as archivo:
                 json.dump(organizaciones, archivo, indent=4, ensure_ascii=False)
@@ -363,45 +499,8 @@ def crearAdministrador():
             print("Administrador creado exitosamente.")
             break
  
-def creaCuentaUsuario():
-    usuarios = {}
-        
-    with open(RUTA_ARCHIVO_USERS, mode="r") as archivo:
-        try:
-            usuarios = json.load(archivo)
-        except json.JSONDecodeError:
-            usuarios = {}
-    
-    while True:
-        print("Para crear una nueva cuenta ingresa los siguientes datos.")
-        matricula = input("Matricula: ")
-        nombre = input("Nombre: ")
-        carrera = input("Carrera: ")
-        correo = input("Correo Institucional: ")
-        rol = input("Rol (Alumno / Organización):")
-    
-        # Validar si la matrícula ya existe
-        if matricula in usuarios:
-            print("Esa matrícula ya está registrada en el sistema.")
-            continue
-    
-        # Comprobación de datos ingresado correctamente
-        if ((matricula == "" or  len(matricula) !=  10) or nombre == "" or carrera == ""):
-            print("Algun dato incorrecto, porfavor ingresa correctamente.")
-        else: 
-            usuarios[matricula] = {
-                "matricula": matricula,
-                "nombre": nombre,
-                "carrera": carrera,
-                "correo": correo,
-                "rol": rol
-            }
-            with open(RUTA_ARCHIVO_USERS, mode="w") as archivo:
-                json.dump(usuarios, archivo, indent=4, ensure_ascii=False)
-            print("Usuario creado exitosamente.")
-            break
-    
-def crearBitacoraUsuario():
+### Funcion reutilizable dentro de los do roles Alumno / Admin
+def crearBitacoraUsuario(mat):
     bitacoras = []
         
     try:
@@ -413,7 +512,8 @@ def crearBitacoraUsuario():
     
     while True:
         print("\n--- Registro de Bitácora ---")
-        matricula = input("Ingresa la matrícula del usuario: ")
+        if mat == "":
+            matricula = input("Ingresa la matrícula del usuario: ")
         fecha = input("Ingresa la fecha (ej. DD/MM/AAAA): ")
         
         # Validar entrada numérica para evitar que el programa truene
@@ -457,7 +557,7 @@ def generarReporteAlumno():
         print("Error: No se pudo abrir o leer 'Usuarios.json'.")
         return
 
-    print("\n--- Exportar Reporte de Alumno a TXT ---")
+    print("\n--- Exportar Reporte de Alumno ---")
     matricula = input("Ingresa la matrícula del alumno a consultar: ").strip()
 
     if matricula not in usuarios:
@@ -468,7 +568,7 @@ def generarReporteAlumno():
 
     registros_alumno = []
     try:
-        with open(RUTA_ARCHIVO_BITACORAS, mode="r", encoding="utf-8") as archivo:
+        with open(RUTA_ARCHIVO_BITACORAS, mode="r") as archivo:
             bitacoras = json.load(archivo)
             if isinstance(bitacoras, dict):
                 # Filtramos iterando sobre los valores del diccionario
@@ -519,13 +619,18 @@ def generarReporteAlumno():
         print(f"Error al escribir el archivo de reporte: {e}")
 
 def acciones_admin():
+    matriz_menu = [
+    ["1) Vista y lectura Archivos", "2) Escritura Archivo"],
+    ["3) Crear Reporte Alumno",     "4) Salir Cuenta"]
+]
+    
     while True:
             print("\nBienvenido " + nombre)
-            print("1) Vista y lectura Archivos")
-            print("2) Escritura Archivo")
-            print("3) Crear Reporte Alumno")
-            print("4) Salir Cuenta\n")
-            opcion = int(input("Opción: "))
+            for i in range(len(matriz_menu)):
+                for j in range(len(matriz_menu[i])):
+                    print(f"{matriz_menu[i][j]}") 
+            
+            opcion = int(input("\nOpción: "))
             
             match opcion:
                 case 1:
