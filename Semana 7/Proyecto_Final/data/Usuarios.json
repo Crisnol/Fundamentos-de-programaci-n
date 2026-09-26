@@ -63,14 +63,6 @@
         "rol": "Alumno",
         "Servicio Social": ""
     },
-    "A123456789": {
-        "matricula": "A123456789",
-        "nombre": "Ricardo",
-        "carrera": "ISC",
-        "correo": "ricardoQ",
-        "rol": "Organizaci�n",
-        "Servicio Social": ""
-    },
     "1234567891": {
         "matricula": "1234567891",
         "nombre": "hhhhhh",
@@ -86,5 +78,26 @@
         "correo": "2323@tecmilenio.mx",
         "rol": "Alumno",
         "Servicio Social": "ORG008"
+    },
+    "3333333333": {
+        "matricula": "3333333333",
+        "nombre": "juan",
+        "carrera": "mercadotecnia",
+        "correo": "90@tecmilenio.mx",
+        "rol": "Alumno",
+        "Servicio Social": ""
+    },
+    "9999999999": {
+        "matricula": "9999999999",
+        "nombre": "Crisnol",
+        "carrera": "ids",
+        "correo": "sd@tecmilenio.mx",
+        "rol": "Alumno",
+        "Servicio Social": "",
+        "fecha_creacion": [
+            8,
+            12,
+            2026
+        ]
     }
 }

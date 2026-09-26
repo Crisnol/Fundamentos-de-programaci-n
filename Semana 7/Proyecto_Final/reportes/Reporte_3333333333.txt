@@ -1,0 +1,15 @@
+_______________________________________________________
+               REPORTE DETALLADO DE ALUMNO               
+_______________________________________________________
+Matrícula: 3333333333
+Nombre:    juan
+Carrera:   mercadotecnia
+Correo:    90@tecmilenio.mx
+Rol:       Alumno
+Fecha Creacion reporte:   (3, 12, 2026)
+-------------------------------------------------------
+Total de entradas registradas: 0
+Total de horas acumuladas:    0 hrs
+-------------------------------------------------------
+El alumno no cuenta con actividades en su bitácora.
+=======================================================

@@ -101,5 +101,18 @@
             9,
             2026
         ]
+    },
+    "ORG021": {
+        "id_org": "ORG021",
+        "nombre": "NASA",
+        "sector": "espacial",
+        "correo": "nasa@gob.com",
+        "descripcion": "espacio, cohetes",
+        "pagina_web": "nasa.com",
+        "fecha creacion": [
+            12,
+            3,
+            2026
+        ]
     }
 }

@@ -60,5 +60,15 @@
         ],
         "horas": 8,
         "descripcion": "mucho"
+    },
+    "1234567890 - (9, 12, 2026)": {
+        "matricula": "1234567890",
+        "fecha": [
+            9,
+            12,
+            2026
+        ],
+        "horas": 8,
+        "descripcion": "muchas cosas"
     }
 }
