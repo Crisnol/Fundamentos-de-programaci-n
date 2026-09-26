@@ -194,9 +194,6 @@ if clave in bitacoras:
     continue
 ```
 
-### Nota adicional de portabilidad
-
-Al intentar ejecutar el programa completo fuera de Windows se obtiene `ModuleNotFoundError: No module named 'msvcrt'`, ya que `controlInactividad()` depende de la librería `msvcrt`, exclusiva de Windows. No es un error de lógica sino de portabilidad: el sistema, tal como está escrito, solo corre de forma nativa en Windows. Se documenta aquí porque se detectó durante el mismo proceso de pruebas y es relevante para cualquiera que intente ejecutar o dar mantenimiento al programa desde otro sistema operativo.
 
 ---
 
