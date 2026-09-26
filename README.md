@@ -41,5 +41,9 @@ Archivos Evaluables por Semana:
 - [17. Entregable_Semana6.ipynb (Ejercicios Castigo)](https://github.com/Crisnol/Fundamentos-de-programaci-n/blob/main/Semana%206/Actividad_extras/Entegrable_Seman6.ipynb)
 
 
+**Semana 7**
 
+    18.Proyecto Final.py
+        /data # son los archivos necesarios para el programa (Usuarios.json,etc)
+    19.Reporte academico.md
 
