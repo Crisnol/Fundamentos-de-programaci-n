@@ -1,6 +1,6 @@
 #Cristian Alejandro Nolasco Vargas
 
-import threading
+import msvcrt
 import time
 import json
 from pathlib import Path
@@ -43,15 +43,17 @@ def inicioMenu():
     except ValueError:
         print("Error: Debes ingresar una opcion valida.")   
 
-def iniciarSesion():        
-
-    with open(RUTA_ARCHIVO_USERS, mode="r") as archivo:
-        try:
+def iniciarSesion():         
+    try:
+        with open(RUTA_ARCHIVO_USERS, mode="r", encoding="utf-8") as archivo:
             usuarios = json.load(archivo)
-        except (FileNotFoundError, json.JSONDecodeError):
-            print("\nNo es posible ejecutar el program")
-            print("Porfavor intentalo mas tarde")
-            
+        
+                    
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("\nNo es posible ejecutar el program")
+        print("Porfavor intentalo mas tarde")
+        return
+    
     while True:
         global matricula
         
@@ -71,15 +73,15 @@ def iniciarSesion():
         elif not(matricula in usuarios):
             print("El usuario no existe, crea una cuenta")
         else:
-            break
-
+            return
+          
 ## Funcion ocupada en Rol Alumno / Admin        
 def crearCuenta(rolUsuario = "Alumno"):
     if rolUsuario == "Alumno":
         global matricula
     usuarios = {}
     
-    with open(RUTA_ARCHIVO_USERS, mode="r") as archivo:
+    with open(RUTA_ARCHIVO_USERS, mode="r", encoding="utf-8") as archivo:
         try:
             usuarios = json.load(archivo)
         except json.JSONDecodeError:
@@ -88,37 +90,43 @@ def crearCuenta(rolUsuario = "Alumno"):
     print("------ Crear Cuenta ------")
     
     while True:
-        print("Para crear una nueva cuenta ingresa los siguientes datos. (0 para canelar)")
+        print("Para crear una nueva cuenta ingresa los siguientes datos.")
         matricula = input("Matricula (10 caracteres): ")
         nombre = input("Nombre: ")
         carrera = input("Carrera: ")
         correo = input("Correo Institucional: ")
         rol = input("Rol (Alumno / Organización):").capitalize()
         servicio = ""
-
-        if "0" in (matricula, nombre, carrera, correo, rol):
-            return "cancelar"
         
         # Validar si la matrícula ya existe
         if matricula in usuarios:
             print("Esa matrícula ya está registrada en el sistema.")
             continue
-        
-        pantalla_carga("Revisando datos")
-        
+                
         # Comprobación de datos ingresado correctamente
         if matricula == "":
             print("Se necesita una matricula para continuar.")
+            continue
         elif len(matricula) != 10:
             print("La matricula no cumple con los requrimentos")
             print("Debe de ser de 10 caracteres")
+            continue
         elif nombre == "":
             print("Se necesita un nombre para continuar")
+            continue
         elif carrera == "":
             print("Se necesita un carre para continuar")
+            continue
+        elif correo == "":
+            print("Error: Ingresa un correo institucional válido.")
+            continue
+        elif "@tecmilenio.mx" not in correo:
+            print("Error: Ingresa un correo institucional válido.")
+            continue
         elif(rol != "Alumno" and rol != "Organización"):
             print("No seleccionaste correctamente el rol")
             print("Ingresa correctamente el rol")
+            continue
         else: 
             usuarios[matricula] = {
                 "matricula": matricula,
@@ -129,15 +137,14 @@ def crearCuenta(rolUsuario = "Alumno"):
                 "Servicio Social": servicio
             }
             try:
-                with open(RUTA_ARCHIVO_USERS, mode="w") as archivo:
+                with open(RUTA_ARCHIVO_USERS, mode="w", encoding="utf-8") as archivo:
                     json.dump(usuarios, archivo, indent=4, ensure_ascii=False)
-
+                pantalla_carga("Creando cuenta")
                 print("Usuario Creado Correctamente")
                 break
             except OSError as e:
                 print(f"Error al escribir el archivo de reporte: {e}")
        
-
 def registro_acceso_cuenta():
     while True:
         global boolSalir
@@ -174,46 +181,63 @@ def pantalla_carga(mensaje="Cargando"):
     print(" ¡Listo!\n")
 
 ## Funcion Inactividad
-def controlInactividad():
+def controlInactividad(mensaje, mins_limite = 10):
     
-    def tarea_principal(callback):
-        print("Se comenzo el timer")
-        callback()
-    def finalizacionTimer():
-        print("se acabao el timer")
-    # def finalizacionTimer():
-    #     print("Se noto incatividad en el usuario")
-        
-        
-    #     while True:
-    #         respuesta = input("Desea Continuar (si/no):")
-    #         match respuesta:
-    #             case "si":
-    #                 controlInactividad()
-    #                 break
-    #             case "no":
-    #                 boolSalir = True
-    #                 break
-    #             case _:
-    #                 print("Dato Ingresado incorrectamente")
+    print(mensaje, end="", flush=True)
+    entrada = ""
+    
+    # Calculamos tiemp. 
+    # 10 minutos * 60 segundos * 10 décimas de segundo por iteración
+    iteraciones = int(mins_limite * 60 * 10)
+    
+    for i in range(iteraciones):
+        # kbhit verifica si hay una tecla presionada en la consola
+        if msvcrt.kbhit():
+            # getwche lee la tecla y la imprime en pantalla
+            char = msvcrt.getwche()
+            
+            if char in ('\r', '\n'):  # El usuario presionó Enter
+                print()
+                return entrada
+            elif char == '\b':  # El usuario presionó Retroceso (borrar)
+                entrada = entrada[:-1]
+                print(" \b", end="", flush=True) 
+            else:
+                entrada += char
                 
-        
-    contadorTiempo = 10.0
-    temporizador = threading.Timer(contadorTiempo,tarea_principal, args=(finalizacionTimer,))
-    temporizador.start()             
+        # Pausa de 0.1 segundos por ciclo
+        time.sleep(0.1)
     
+    print("\nTiempo agotado.")
+    return "inactividad"   
+         
+def respuestaInactividad():
+    while True:
+        print("\nSe ha detectado inactividad en el menú.")
+        confirmacion = controlInactividad("¿Desea continuar? Escriba 'si' o 'no': ", mins_limite=1)
+
+        match confirmacion.strip().lower(): 
+            case "si":
+                return "si"
+            case "no":
+                print("Cerrando sesión. Regresando al inicio...")
+                return "no"
+            case _:
+                print("Ingresa correctamente una opcionn")
+                continue
+            
+   
 ## Funcion Obtener Datos del usuario
 def loadDataUser(matricula):
-    with open(RUTA_ARCHIVO_USERS, mode="r") as archivo:
+    with open(RUTA_ARCHIVO_USERS, mode="r", encoding="utf-8") as archivo:
         try:
             usuarios = json.load(archivo)
+            return usuarios.get(matricula)
         except (FileNotFoundError, json.JSONDecodeError):
             print("\nNo es posible ejecutar el program")
             print("Porfavor intentalo mas tarde")
-
-    userData = usuarios[matricula]
-    return userData
-
+            return None
+            
 ## Funcion obtener nombre org atra vez id
 def obtenerNombreOrganizacion(id_org):
     try:
@@ -234,16 +258,16 @@ def estructuraFecha():
             mes = int(input("Ingresa el mes (numero): "))
             año = int(input("Ingresa el año (AAAA): "))
 
+            if año != 2026:
+                print("\nAño incorrecto, ingresa uno valido.")
             # Verifica que la fecha exista realmente en el calendario
             datetime(año, mes, dia)
             
             fecha_tupla = (dia, mes, año)
             return fecha_tupla
-            break
+            
         except ValueError:
             print("Entrada invalida. Asegurate de ingresar numeros y una fecha real.\n")
-    
-
     
 # Funciones Acciones Programa
 ## Funciones Rol Alumno ----------------
@@ -296,7 +320,7 @@ def servicioSocial():
     global matricula
     
     try:
-        with open(RUTA_ARCHIVO_USERS, "r") as archivo:
+        with open(RUTA_ARCHIVO_USERS, "r", encoding="utf-8") as archivo:
             usuarios = json.load(archivo)
     except (FileNotFoundError, json.JSONDecodeError):
         print("Error: No se pudo cargar 'Usuarios.json'.")
@@ -305,7 +329,7 @@ def servicioSocial():
 
     alumno = usuarios.get(matricula)
 
-    # 2. Si NO tiene servicio social asignado, mostrar formulario de inscripción
+    # Si NO tiene servicio social asignado, mostrar formulario de inscripción
     if not alumno.get("Servicio Social"):
         print("\n--------------------------------------------------")
         print("Aún no tienes asignada una organización de Servicio Social.")
@@ -341,7 +365,7 @@ def servicioSocial():
             print(f"Error al guardar los cambios: {e}")
             return
 
-    # 3. Menú principal del Servicio Social (cuando ya cuenta con organización)
+    # Menú principal del Servicio Social (cuando ya cuenta con organización)
     id_org = alumno["Servicio Social"]
 
     while True:
@@ -386,15 +410,25 @@ def servicioSocial():
 
 def acciones_alumno():
     while True:
-        print("\nBienvenido " + nombre)
+        print("\nBienvenido Alumno " + nombre)
         print("1) Organizaciones")
         print("2) Mi servicio")
         print("3) Salir de la cuenta")
         
+        respuesta = controlInactividad("Opción: ", mins_limite=10)
+        
+        if respuesta == "inactividad":
+            confirmacion = respuestaInactividad()
+            if confirmacion == "si":
+                continue
+            elif confirmacion == "no":
+                return
+            
         try:
-            opcion = int(input("Opción: "))
+            opcion = int(respuesta)
         except ValueError:
             print("Error: Debes ingresar una opcion valida.")
+            continue
         
         match opcion:
             case 1:
@@ -423,13 +457,13 @@ def lecturaArchivo():
       while True:
         nombre_archivo = input("Ingresa el nombre del archivo para leer (0 para cancelar): ")
         
-        if nombre_archivo == 0:
+        if nombre_archivo == "0":
             break
         
         ruta_archivo = DIR_BASE / "data" / nombre_archivo
 
         try:
-            with open(ruta_archivo, "r") as archivo:
+            with open(ruta_archivo, "r", encoding="utf-8") as archivo:
                 data = json.load(archivo)
             
             if not data:
@@ -499,13 +533,13 @@ def menuEscrituraArchivo():
     while True:
         nombre_archivo = input("Ingresa el nombre del archivo para la nueva entrada (0 para cancelar): ")
         
-        if nombre_archivo == 0:
+        if nombre_archivo == "0":
             break
         
         ruta_archivo = DIR_BASE / "data" / nombre_archivo
 
         try:
-            with open(ruta_archivo, "r") as archivo:
+            with open(ruta_archivo, "r", encoding="utf-8") as archivo:
                 data = json.load(archivo)
         
             match nombre_archivo:
@@ -530,7 +564,7 @@ def crearOrganizacion():
     organizaciones = {}
         
     try:
-        with open(RUTA_ARCHIVO_ORGS, mode="r") as archivo:
+        with open(RUTA_ARCHIVO_ORGS, mode="r", encoding="utf-8") as archivo:
             organizaciones = json.load(archivo)
     except (FileNotFoundError, json.JSONDecodeError):
         organizaciones = {}
@@ -562,7 +596,7 @@ def crearOrganizacion():
                 "fecha creacion": fechaTupla
             }
             try:
-                with open(RUTA_ARCHIVO_ORGS, mode="w") as archivo:
+                with open(RUTA_ARCHIVO_ORGS, mode="w", encoding="utf-8") as archivo:
                     json.dump(organizaciones, archivo, indent=4, ensure_ascii=False)
                 pantalla_carga("Escribiendo los datos")
                 print("Organización registrada exitosamente.")
@@ -574,7 +608,7 @@ def crearAdministrador():
     administradores = {}
         
     try:
-        with open(RUTA_ARCHIVO_ADMINS, mode="r") as archivo:
+        with open(RUTA_ARCHIVO_ADMINS, mode="r", encoding="utf-8") as archivo:
             administradores = json.load(archivo)
     except (FileNotFoundError, json.JSONDecodeError):
         administradores = {}
@@ -602,7 +636,7 @@ def crearAdministrador():
                 "fecha creacion": fechaTupla
             }
             try:
-                with open(RUTA_ARCHIVO_ADMINS, mode="w") as archivo:
+                with open(RUTA_ARCHIVO_ADMINS, mode="w", encoding="utf-8") as archivo:
                     json.dump(administradores, archivo, indent=4, ensure_ascii=False)
                 pantalla_carga("Escribiendo los datos")
                 print("Administrador creado exitosamente.")
@@ -613,29 +647,45 @@ def crearAdministrador():
 ### Funcion reutilizable dentro de los do roles Alumno / Admin
 def crearBitacoraUsuario(rol):
     
-    bitacoras = []
+    max_horas_diarias = 8  
+    min_horas_diarias = 1
+    
+    bitacoras = {}
         
     try:
-        with open(RUTA_ARCHIVO_BITACORAS, mode="r") as archivo:
+        with open(RUTA_ARCHIVO_BITACORAS, mode="r", encoding="utf-8") as archivo:
             bitacoras = json.load(archivo)
             
     except (FileNotFoundError, json.JSONDecodeError):
-        bitacoras = []
+        bitacoras = {}
     
     while True:
         print("\n--- Registro de Bitácora ---")
+        
         if rol == "Alumno":
             global matricula
         else:
             matricula = input("Ingresa la matrícula del usuario: ")
             
         fechaTupla = estructuraFecha() 
+        
         # Validar entrada numérica para evitar que el programa truene
-        try:
-            horas = int(input("Ingresa las horas acumuladas (entero): "))
-        except ValueError:
-            print("Error: Las horas deben ser un número entero válido.")
-            continue
+        while True:
+            try:
+                # Usando la función auxiliar de entrada descrita anteriormente
+                horas = int(input("Ingresa las horas acumuladas (entero): "))
+
+                if horas < min_horas_diarias:
+                    print(f"Error: Debes registrar al menos {min_horas_diarias} hora.")
+                    continue
+                    
+                if horas > max_horas_diarias:
+                    print(f"Error: No puedes registrar más de {max_horas_diarias} horas en un solo día.")
+                    continue
+
+                break
+            except ValueError:
+                print("Error: Ingresa un número entero válido.")
 
         descripcion = input("Ingresa las actividades realizadas: ")
 
@@ -665,7 +715,7 @@ def crearBitacoraUsuario(rol):
 
 def generarReporteAlumno():
     try:
-        with open(RUTA_ARCHIVO_USERS, mode="r") as archivo:
+        with open(RUTA_ARCHIVO_USERS, mode="r", encoding="utf-8") as archivo:
             usuarios = json.load(archivo)
     except (FileNotFoundError, json.JSONDecodeError):
         print("Error: No se pudo abrir o leer 'Usuarios.json'.")
@@ -683,7 +733,7 @@ def generarReporteAlumno():
 
     registros_alumno = []
     try:
-        with open(RUTA_ARCHIVO_BITACORAS, mode="r") as archivo:
+        with open(RUTA_ARCHIVO_BITACORAS, mode="r", encoding="utf-8") as archivo:
             bitacoras = json.load(archivo)
             if isinstance(bitacoras, dict):
                 # Filtramos iterando sobre los valores del diccionario
@@ -728,7 +778,7 @@ def generarReporteAlumno():
     lineas.append("=" * 55)
     pantalla_carga("Generando el Archivo (～￣▽￣)～")
     try:
-        with open(ruta_txt, mode="w",) as archivo_txt:
+        with open(ruta_txt, mode="w", encoding="utf-8") as archivo_txt:
             archivo_txt.write("\n".join(lineas))
         print(f"\nReporte generado con éxito en: {ruta_txt}")
     except OSError as e:
@@ -743,15 +793,26 @@ def acciones_admin():
 ]
     
     while True:
-            print("\nBienvenido " + nombre)
+            print("\nBienvenido Administrador " + nombre)
             for i in range(len(matriz_menu)):
                 for j in range(len(matriz_menu[i])):
                     print(f"{matriz_menu[i][j]}") 
             
+            
+            respuesta = controlInactividad("Opción: ", mins_limite=10)
+                    
+            if respuesta == "inactividad":
+                confirmacion = respuestaInactividad()
+                if confirmacion == "si":
+                    continue
+                elif confirmacion == "no":
+                    return
+            
             try:
-                opcion = int(input("\nOpción: "))
+                opcion = int(respuesta)
             except ValueError:
                 print("Error: Debes ingresar una opcion valida.")
+                continue
                 
             # controlInactividad()
             match opcion:
@@ -793,6 +854,10 @@ while True:
         break
     
     datosUsuario = loadDataUser(matricula = matricula)
+    
+    if not datosUsuario:
+        print("Error: No se encontraron los datos del usuario. Verifica la matrícula.")
+        continue
     
     # Rol y nombre hardcodeado, pero lo debe recuperar con la cuenta
     rol = datosUsuario["rol"]

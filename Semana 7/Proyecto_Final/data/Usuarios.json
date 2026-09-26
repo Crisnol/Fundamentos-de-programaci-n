@@ -68,7 +68,7 @@
         "nombre": "Ricardo",
         "carrera": "ISC",
         "correo": "ricardoQ",
-        "rol": "Organización",
+        "rol": "Organizaciï¿½n",
         "Servicio Social": ""
     },
     "1234567891": {
@@ -78,5 +78,13 @@
         "correo": "jdjjfjfjfjfjf@jfjfjf.mx",
         "rol": "Alumno",
         "Servicio Social": ""
+    },
+    "4567890234": {
+        "matricula": "4567890234",
+        "nombre": "crisnol",
+        "carrera": "ids",
+        "correo": "2323@tecmilenio.mx",
+        "rol": "Alumno",
+        "Servicio Social": "ORG008"
     }
 }
